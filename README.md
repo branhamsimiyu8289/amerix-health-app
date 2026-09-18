@@ -14,6 +14,16 @@ Amerix Health Advisor is a client-side health tracking application built with on
 - CSV and JSON history export
 - Responsive desktop and mobile layout
 
+## Tech Stack
+
+- HTML5 for the application structure and accessible forms
+- CSS3 for responsive layout, themes, animations, and visual styling
+- Vanilla JavaScript for authentication flow, navigation, BMI calculations, habit tracking, fasting timer logic, and data export
+- Browser `localStorage` API for client-side persistence
+- Browser File and Blob APIs for CSV and JSON downloads
+- Python `http.server` for optional local development serving
+- Git and GitHub for version control and project hosting
+
 ## Project Files
 
 ```text
