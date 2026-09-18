@@ -1,0 +1,2890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amerix Health Advisor</title>
+  <style>
+    /* ========================================================================= */
+    /* THEME VARIABLES                                                          */
+    /* LIGHT MODE: Acid Mint (replacing light green) + Mist Gray (replacing white)*/
+    /* DARK MODE: Inkberry + Forest Graphite                                     */
+    /* ========================================================================= */
+    :root, [data-theme="light"] {
+      /* Backgrounds & Canvas */
+      --bg-body: linear-gradient(135deg, #edf2f4 0%, #dff0e6 50%, #e6eff2 100%);
+      --bg-header: linear-gradient(135deg, #13331d 0%, #1e4b2a 100%);
+      --bg-panel: rgba(243, 247, 248, 0.98);
+      --bg-card: #eaeff1;
+      --bg-input: #f4f8f9;
+      --bg-footer: rgba(237, 242, 244, 0.9);
+
+      /* Mist Gray Palette (Replacing pure white) */
+      --mist-gray: #edf2f4;
+      --white: #eaeff1;
+
+      /* Acid Mint Palette (Replacing light green) */
+      --acid-mint: #0ea558;
+      --acid-mint-bright: #2ee585;
+      --acid-mint-glow: rgba(46, 229, 133, 0.28);
+      --mint: #d7f7e2;
+      --light-mint: #eaf9f0;
+
+      /* Typography & Accents */
+      --ink: #14221a;
+      --muted: #52685c;
+      --green: #118a44;
+      --deep-green: #13381e;
+      --accent-green: #1a733c;
+      --line: #bce1cb;
+
+      /* Secondary Buttons & UI */
+      --btn-secondary-bg: #e2eaed;
+      --btn-secondary-text: #143d22;
+      --btn-secondary-border: #9ed1b1;
+      --btn-secondary-hover-bg: #d7f7e2;
+      --dropdown-bg: #15331d;
+      --table-stripe: #e4ede7;
+      --table-hover: #dcf4e5;
+      --quote-bg: linear-gradient(135deg, #eaf9f0 0%, #d7f7e2 100%);
+      --quote-border: #118a44;
+
+      /* Common tokens */
+      --gold: #d97706;
+      --danger: #dc2626;
+      --info: #0284c7;
+      --card-shadow: 0 6px 20px rgba(18, 48, 27, 0.07), 0 2px 4px rgba(0, 0, 0, 0.03);
+      --radius: 12px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    [data-theme="dark"] {
+      /* Backgrounds & Canvas: Inkberry (Deep midnight inky tone) */
+      --bg-body: linear-gradient(135deg, #090e13 0%, #0d141c 50%, #070c11 100%);
+      --bg-header: linear-gradient(135deg, #090e14 0%, #0e1721 100%);
+      --bg-footer: #090e13;
+
+      /* Surfaces: Forest Graphite (Deep pine charcoal slate) */
+      --bg-panel: #131e17;
+      --bg-card: #18251e;
+      --bg-input: #0e1611;
+      --white: #18251e;
+      --mist-gray: #18251e;
+      --dropdown-bg: #0d1711;
+
+      /* Acid Mint Highlights on Forest Graphite */
+      --acid-mint: #3df487;
+      --acid-mint-bright: #4ade80;
+      --acid-mint-glow: rgba(61, 244, 135, 0.32);
+      --mint: #16281e;
+      --light-mint: #111d16;
+
+      /* Typography & Accents */
+      --ink: #edf5f0;
+      --muted: #8ea79a;
+      --green: #22c55e;
+      --deep-green: #3df487;
+      --accent-green: #4ade80;
+      --line: #243b2e;
+
+      /* Secondary Buttons & UI */
+      --btn-secondary-bg: #192720;
+      --btn-secondary-text: #3df487;
+      --btn-secondary-border: #294836;
+      --btn-secondary-hover-bg: #23382c;
+      --table-stripe: #142018;
+      --table-hover: #1c2e24;
+      --quote-bg: linear-gradient(135deg, #101c15 0%, #16261d 100%);
+      --quote-border: #3df487;
+
+      --card-shadow: 0 8px 26px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.4);
+    }
+
+    * { box-sizing: border-box; }
+
+    /* SMOOTH THEME TRANSITION */
+    body, header, .panel, .metric-card, .principle-row-card, .advice-card,
+    .fast-completion-card, input, select, textarea, fieldset, table, th, td,
+    .compact-track-item, footer, .custom-dropdown-list, .dropdown-trigger-btn,
+    .nav-tab, .theme-toggle-btn {
+      transition: background-color 220ms ease, border-color 220ms ease, color 220ms ease, box-shadow 220ms ease;
+    }
+
+    body {
+      min-width: 320px;
+      margin: 0;
+      color: var(--ink);
+      background: var(--bg-body);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* COMPACT HEADER */
+    header {
+      padding: 10px clamp(14px, 3.5vw, 36px);
+      color: #ffffff;
+      background: var(--bg-header);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+      border-bottom: 1px solid rgba(61, 244, 135, 0.2);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-container {
+      width: min(1160px, 100%);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .brand-block {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .eyebrow {
+      margin: 0;
+      color: var(--acid-mint-bright);
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.3rem, 2.4vw, 1.75rem);
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      font-weight: 800;
+    }
+
+    header p.subtitle {
+      margin: 2px 0 0;
+      color: #d7f7e2;
+      font-size: 0.78rem;
+    }
+    [data-theme="dark"] header p.subtitle {
+      color: #a3c2b1;
+    }
+
+    /* USER BADGE & NAVIGATION BLOCK */
+    .header-user-nav-block {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+    }
+
+    .user-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* THEME TOGGLE BUTTON (LIGHT / DARK SWITCH) */
+    .theme-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 999px;
+      padding: 4px 11px;
+      font-size: 0.76rem;
+      font-weight: 750;
+      color: #ffffff;
+      cursor: pointer;
+      min-height: auto;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+      transition: all 180ms ease;
+    }
+    .theme-toggle-btn:hover {
+      background: rgba(255, 255, 255, 0.24);
+      border-color: var(--acid-mint-bright);
+      color: #ffffff;
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    }
+    [data-theme="dark"] .theme-toggle-btn {
+      background: rgba(61, 244, 135, 0.12);
+      border: 1px solid rgba(61, 244, 135, 0.35);
+      color: #3df487;
+    }
+    [data-theme="dark"] .theme-toggle-btn:hover {
+      background: rgba(61, 244, 135, 0.22);
+      border-color: #3df487;
+      color: #ffffff;
+      box-shadow: 0 0 12px rgba(61, 244, 135, 0.35);
+    }
+
+    .user-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.14);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+    }
+    .user-badge button {
+      background: transparent;
+      border: none;
+      color: #fecdd3;
+      font-size: 0.76rem;
+      font-weight: 750;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 0;
+      min-height: auto;
+      box-shadow: none;
+    }
+    .user-badge button:hover {
+      color: #ffffff;
+      background: transparent;
+      transform: none;
+    }
+
+    /* NAVIGATION BAR: ONLY VISIBLE AFTER LOGIN/SIGNUP */
+    .nav-bar-four {
+      display: none; /* Shown via JavaScript when user is authenticated */
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    .nav-tab {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 11px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 7px;
+      color: #e5f5e7;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      min-height: auto;
+      box-shadow: none;
+      transition: all 160ms ease;
+      white-space: nowrap;
+    }
+    .nav-tab:hover {
+      background: rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+    .nav-tab.active {
+      background: var(--mist-gray);
+      color: var(--deep-green);
+      border-color: var(--mist-gray);
+      font-weight: 800;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    [data-theme="dark"] .nav-tab.active {
+      background: #192720;
+      color: var(--acid-mint);
+      border-color: var(--acid-mint);
+      box-shadow: 0 0 10px rgba(61, 244, 135, 0.25);
+    }
+
+    main {
+      flex: 1;
+      width: min(1160px, 100%);
+      margin: 0 auto;
+      padding: clamp(12px, 2vh, 20px) clamp(12px, 3vw, 32px) 32px;
+      display: grid;
+    }
+
+    /* VIEW VISIBILITY ANIMATION */
+    .view-step {
+      display: none;
+      animation: fadeIn 180ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .view-step.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* PANEL BASE */
+    .panel {
+      padding: clamp(16px, 2.2vw, 22px);
+      background: var(--bg-panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--card-shadow);
+      margin-bottom: 16px;
+      color: var(--ink);
+    }
+    .panel:last-child {
+      margin-bottom: 0;
+    }
+
+    .panel h2 {
+      margin: 0 0 5px;
+      color: var(--deep-green);
+      font-size: clamp(1.2rem, 2.1vw, 1.55rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+    .panel h3 {
+      margin: 0 0 6px;
+      color: var(--deep-green);
+      font-size: 1.08rem;
+      font-weight: 750;
+    }
+    .panel p.desc {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.4;
+    }
+
+    /* LAPTOP-FITTING LANDING GRID */
+    .landing-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(320px, 1fr);
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    /* COMPACT TRACK LIST */
+    .compact-track-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 6px;
+    }
+    .compact-track-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 6px 9px;
+      background: var(--light-mint);
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      font-size: 0.82rem;
+      line-height: 1.3;
+    }
+    .compact-track-icon {
+      font-size: 1.1rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .compact-track-item strong {
+      color: var(--deep-green);
+      font-size: 0.84rem;
+      margin-right: 3px;
+    }
+
+    /* ACTIONS & BUTTONS */
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .actions.center {
+      justify-content: center;
+    }
+
+    button, .button-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 40px;
+      padding: 8px 18px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      color: var(--white);
+      background: var(--green);
+      font: inherit;
+      font-size: 0.9rem;
+      font-weight: 750;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(47, 105, 58, 0.16);
+      transition: all 160ms ease;
+    }
+    button:hover:not(:disabled), .button-link:hover:not(:disabled) {
+      background: var(--deep-green);
+      box-shadow: 0 4px 10px rgba(34, 71, 42, 0.22);
+      transform: translateY(-1px);
+    }
+    button:disabled, .button-link:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    button.secondary, .button-link.secondary {
+      color: var(--btn-secondary-text);
+      background: var(--btn-secondary-bg);
+      border-color: var(--btn-secondary-border);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+    button.secondary:hover:not(:disabled), .button-link.secondary:hover:not(:disabled) {
+      background: var(--btn-secondary-hover-bg);
+      border-color: var(--green);
+      color: var(--deep-green);
+    }
+    button.danger {
+      background: #ef4444;
+      box-shadow: 0 2px 6px rgba(239, 68, 68, 0.2);
+    }
+    button.danger:hover:not(:disabled) {
+      background: #b91c1c;
+    }
+    button.primary-large {
+      padding: 10px 24px;
+      font-size: 0.98rem;
+      border-radius: 9px;
+    }
+
+    /* FORMS */
+    form {
+      display: grid;
+      gap: 12px;
+    }
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .field-grid.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    label, fieldset {
+      display: grid;
+      gap: 4px;
+      color: var(--ink);
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+    label span.hint {
+      font-weight: 500;
+      color: var(--muted);
+      font-size: 0.76rem;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      min-height: 40px;
+      padding: 7px 11px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      color: var(--ink);
+      background: var(--bg-input);
+      font: inherit;
+      font-size: 0.9rem;
+      transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s, color 0.15s;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--acid-mint);
+      box-shadow: 0 0 0 3px var(--acid-mint-glow);
+    }
+
+    fieldset {
+      min-width: 0;
+      margin: 0;
+      padding: 9px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--light-mint);
+    }
+    legend {
+      padding: 0 4px;
+      color: var(--deep-green);
+      font-size: 0.84rem;
+      font-weight: 750;
+    }
+    .radio-options {
+      display: grid;
+      gap: 7px;
+      margin-top: 4px;
+    }
+    .radio-options label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .radio-options input {
+      width: auto;
+      min-height: auto;
+      accent-color: var(--acid-mint);
+      cursor: pointer;
+    }
+
+    /* FASTING TRACKER BOX WITH CUSTOM STYLED DROPDOWN & HOVER EFFECTS */
+    .fasting-timer-box {
+      background: linear-gradient(135deg, #1c3823 0%, #2c5334 100%);
+      color: var(--white);
+      border-radius: var(--radius);
+      padding: clamp(16px, 2.5vw, 24px);
+      box-shadow: var(--card-shadow);
+      margin-bottom: 20px;
+    }
+    .fasting-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .fasting-header h3 {
+      color: #ffffff;
+      margin: 0;
+      font-size: 1.15rem;
+    }
+
+    /* CUSTOM STYLED PROTOCOL DROPDOWN */
+    .custom-dropdown-container {
+      position: relative;
+      min-width: 250px;
+    }
+    .dropdown-trigger-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 9px;
+      padding: 7px 13px;
+      color: #ffffff;
+      font-size: 0.86rem;
+      font-weight: 750;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      transition: all 180ms ease;
+    }
+    .dropdown-trigger-btn:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: #86efac;
+      box-shadow: 0 0 12px rgba(134, 239, 172, 0.25);
+      transform: translateY(-1px);
+    }
+    .dropdown-trigger-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+    .dropdown-arrow-icon {
+      font-size: 0.72rem;
+      color: #bbf7d0;
+      transition: transform 200ms ease;
+    }
+    .dropdown-trigger-btn.open .dropdown-arrow-icon {
+      transform: rotate(180deg);
+    }
+
+    .custom-dropdown-list {
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      background: #183720;
+      border: 1px solid rgba(134, 239, 172, 0.35);
+      border-radius: 10px;
+      padding: 6px;
+      box-shadow: 0 14px 32px rgba(10, 28, 15, 0.55), 0 4px 10px rgba(0, 0, 0, 0.3);
+      z-index: 50;
+      animation: fadeInDown 180ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .custom-dropdown-list.show {
+      display: block;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* DROPDOWN OPTION WITH PROPER HOVERING EFFECT */
+    .dropdown-opt-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      border-left: 3px solid transparent;
+      transition: all 160ms cubic-bezier(0.16, 1, 0.3, 1);
+      color: #e2f2e5;
+      margin-bottom: 4px;
+    }
+    .dropdown-opt-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .dropdown-opt-item:hover {
+      background: linear-gradient(90deg, rgba(74, 222, 128, 0.22) 0%, rgba(34, 71, 42, 0.85) 100%);
+      border-left: 3px solid #4ade80;
+      color: #ffffff;
+      transform: translateX(4px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    }
+    .dropdown-opt-item.selected {
+      background: rgba(74, 222, 128, 0.14);
+      border-left: 3px solid #86efac;
+      font-weight: 800;
+    }
+
+    .opt-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .opt-icon {
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+    .opt-title {
+      font-size: 0.86rem;
+      font-weight: 750;
+      color: #ffffff;
+    }
+    .opt-desc {
+      font-size: 0.72rem;
+      color: #bbf7d0;
+      margin-top: 1px;
+    }
+    .opt-badge {
+      font-size: 0.74rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      color: #dcfce7;
+      white-space: nowrap;
+      transition: all 160ms ease;
+    }
+    .dropdown-opt-item:hover .opt-badge {
+      background: #4ade80;
+      color: #0f2914;
+    }
+
+    .fasting-timer-display {
+      font-size: clamp(2.4rem, 5.5vw, 3.5rem);
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      font-variant-numeric: tabular-nums;
+      text-align: center;
+      margin: 10px 0;
+      color: #f7fff7;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .fasting-status-label {
+      text-align: center;
+      color: #bfe5c2;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+    .fasting-progress-track {
+      width: 100%;
+      height: 9px;
+      background: rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .fasting-progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--acid-mint-bright), var(--acid-mint));
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+
+    /* THE TWO FASTING BUTTONS: START AND FINISH */
+    .fasting-controls-two {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    #btnStartFast {
+      min-width: 140px;
+      padding: 10px 24px;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      background: #16a34a;
+      box-shadow: 0 3px 12px rgba(22, 163, 74, 0.3);
+    }
+    #btnStartFast:hover:not(:disabled) {
+      background: #15803d;
+      box-shadow: 0 5px 16px rgba(21, 128, 61, 0.4);
+    }
+    #btnFinishFast {
+      min-width: 140px;
+      padding: 10px 24px;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      background: #dc2626;
+      box-shadow: 0 3px 12px rgba(220, 38, 38, 0.3);
+    }
+    #btnFinishFast:hover:not(:disabled) {
+      background: #b91c1c;
+      box-shadow: 0 5px 16px rgba(185, 28, 28, 0.4);
+    }
+
+    /* FASTING COMPLETION RESULT CARD */
+    .fast-completion-card {
+      margin-top: 18px;
+      padding: 16px 18px;
+      border-radius: 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      box-shadow: var(--card-shadow);
+      animation: fadeIn 220ms ease;
+      display: none;
+    }
+    .fast-completion-card.goal-met {
+      border-left: 6px solid #16a34a;
+    }
+    .fast-completion-card.goal-missed {
+      border-left: 6px solid #f59e0b;
+    }
+    .completion-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .completion-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .badge-met {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .badge-missed {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    .completion-metrics-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 8px 12px;
+      background: var(--light-mint);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      font-size: 0.84rem;
+      color: var(--ink);
+    }
+    .completion-metrics-row strong {
+      color: var(--deep-green);
+    }
+    .completion-advice-text {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: var(--ink);
+      margin: 0 0 12px;
+    }
+
+    .saline-tip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 7px;
+      font-size: 0.82rem;
+      color: #e2f5e4;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    /* PRINCIPLES SECTION: DISPLAY FLEX COLUMN */
+    .principles-flex-column {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .principle-row-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--green);
+      border-radius: 9px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+      transition: transform 140ms ease, box-shadow 140ms ease;
+    }
+    .principle-row-card:hover {
+      transform: translateX(3px);
+      box-shadow: 0 3px 10px rgba(41, 81, 51, 0.06);
+    }
+    .principle-row-icon {
+      font-size: 1.35rem;
+      line-height: 1;
+      padding-top: 2px;
+      flex-shrink: 0;
+    }
+    .principle-row-content h4 {
+      margin: 0 0 3px;
+      color: var(--deep-green);
+      font-size: 0.94rem;
+      font-weight: 800;
+    }
+    .principle-row-content p {
+      margin: 0;
+      color: var(--ink);
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+
+    /* COMPACT SUMMARY METRICS */
+    .metrics-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .metric-card {
+      padding: 12px 14px;
+      border-radius: 9px;
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      box-shadow: var(--card-shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .metric-label {
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 2px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .metric-value {
+      font-size: 1.38rem;
+      font-weight: 800;
+      color: var(--deep-green);
+      line-height: 1.15;
+      margin-bottom: 3px;
+    }
+    .metric-progress {
+      width: 100%;
+      height: 6px;
+      background: var(--mint);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 3px;
+    }
+    .metric-progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--acid-mint);
+      transition: width 0.4s ease;
+    }
+    .metric-note {
+      font-size: 0.74rem;
+      color: var(--muted);
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    /* BMI BADGES */
+    .bmi-badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 800;
+    }
+    .bmi-normal { background: #dcfce7; color: #166534; }
+    .bmi-under { background: #fef9c3; color: #854d0e; }
+    .bmi-over { background: #ffedd5; color: #9a3412; }
+    .bmi-obese { background: #fee2e2; color: #991b1b; }
+
+    /* COMPACT TABLE & RESPONSIVE HISTORY ARCHITECTURE */
+    .table-wrap {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      margin: 10px 0;
+      background: var(--bg-card);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    table.history-table {
+      width: 100%;
+      min-width: 0;
+      border-collapse: collapse;
+    }
+    table.history-table th, table.history-table td {
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      font-size: 0.83rem;
+      color: var(--ink);
+    }
+    table.history-table th {
+      color: var(--deep-green);
+      background: var(--mint);
+      font-weight: 750;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    table.history-table tr:hover td {
+      background: var(--table-hover);
+    }
+    .mobile-only-delete {
+      display: none;
+    }
+    .btn-delete-row {
+      background: transparent;
+      border: 1px solid #fecaca;
+      color: #ef4444;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      min-height: auto;
+      cursor: pointer;
+      box-shadow: none;
+      transition: all 140ms ease;
+    }
+    .btn-delete-row:hover {
+      background: #fee2e2;
+      color: #b91c1c;
+      transform: none;
+    }
+
+    /* MOBILE DISPLAY: RESPONSIVE CARDS WITHOUT SIDE SCROLLING */
+    @media (max-width: 680px) {
+      .table-wrap {
+        border: none;
+        background: transparent;
+        overflow: visible;
+        margin: 8px 0;
+      }
+      table.history-table {
+        display: block;
+        width: 100%;
+        min-width: 0 !important;
+      }
+      table.history-table thead {
+        display: none; /* Hide wide table headers on mobile */
+      }
+      table.history-table tbody {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+      }
+      table.history-table tr.history-row {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px 12px;
+        background: var(--bg-card);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 12px 14px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+        transition: transform 140ms ease, box-shadow 140ms ease;
+      }
+      table.history-table tr.history-row:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+      }
+      table.history-table tr.history-row td {
+        border: none;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        font-size: 0.86rem;
+      }
+      table.history-table tr.history-row:hover td {
+        background: transparent;
+      }
+      table.history-table td::before {
+        content: attr(data-label);
+        font-size: 0.7rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--muted);
+      }
+
+      /* Card Header: Timestamp & Delete Button on same top row */
+      table.history-table td.cell-timestamp {
+        grid-column: 1 / -1;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 7px;
+        border-bottom: 1px solid var(--line);
+        margin-bottom: 2px;
+      }
+      table.history-table td.cell-timestamp::before {
+        display: none;
+      }
+      .mobile-only-delete {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .desktop-only-action {
+        display: none !important;
+      }
+
+      /* Metric cell values */
+      .metric-cell-val {
+        font-weight: 700;
+        color: var(--ink);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .metric-cell-val small {
+        font-weight: 500;
+        color: var(--muted);
+      }
+
+      /* Protocol chip at bottom of card */
+      table.history-table td.cell-protocol {
+        grid-column: 1 / -1;
+        margin-top: 2px;
+        padding-top: 8px;
+        border-top: 1px dashed var(--line);
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      table.history-table td.cell-protocol::before {
+        content: "Protocol";
+        margin-bottom: 0;
+      }
+      table.history-table td.cell-protocol .bmi-badge {
+        font-size: 0.75rem;
+        padding: 3px 9px;
+      }
+
+      /* Empty history state on mobile */
+      table.history-table td.cell-empty {
+        display: block;
+        width: 100%;
+        text-align: center;
+        padding: 20px;
+        background: var(--bg-card);
+        border: 1px solid var(--line);
+        border-radius: 9px;
+      }
+      table.history-table td.cell-empty::before {
+        display: none;
+      }
+    }
+
+    /* ADVICE CARDS */
+    .advice-container {
+      display: grid;
+      gap: 12px;
+    }
+    .advice-card {
+      padding: 16px 20px;
+      border-radius: 9px;
+      background: var(--bg-card);
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--green);
+      box-shadow: var(--card-shadow);
+    }
+    .advice-card h3 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 5px;
+      color: var(--deep-green);
+      font-size: 1.05rem;
+    }
+    .advice-card p {
+      margin: 0;
+      color: var(--ink);
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+    .amerix-quote-box {
+      margin-top: 18px;
+      padding: 16px;
+      background: var(--quote-bg);
+      border: 1px dashed var(--quote-border);
+      border-radius: 9px;
+      text-align: center;
+    }
+    .amerix-quote-box p {
+      font-style: italic;
+      font-size: 0.96rem;
+      font-weight: 600;
+      color: var(--deep-green);
+      margin: 0 0 3px;
+    }
+    .amerix-quote-box span {
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--acid-mint);
+    }
+
+    /* TOAST ALERTS */
+    .toast-msg {
+      padding: 7px 12px;
+      border-radius: 7px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      display: none;
+    }
+    .toast-msg.success {
+      display: block;
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+    .toast-msg.error {
+      display: block;
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .switch-link {
+      margin-top: 10px;
+      font-size: 0.84rem;
+      color: var(--muted);
+      text-align: center;
+    }
+    .switch-link a {
+      color: var(--green);
+      font-weight: 750;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 16px 14px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      background: var(--bg-footer);
+    }
+
+    /* DARK MODE SPECIFIC ADJUSTMENTS (INKBERRY & FOREST GRAPHITE SURFACES) */
+    [data-theme="dark"] .bmi-normal { background: #133821; color: #4ade80; border: 1px solid #235936; }
+    [data-theme="dark"] .bmi-under { background: #3d3312; color: #fde047; border: 1px solid #5e4e1a; }
+    [data-theme="dark"] .bmi-over { background: #3f2212; color: #fb923c; border: 1px solid #63361a; }
+    [data-theme="dark"] .bmi-obese { background: #3f1414; color: #f87171; border: 1px solid #642020; }
+    
+    [data-theme="dark"] .badge-met { background: #133821; color: #4ade80; border: 1px solid #235936; }
+    [data-theme="dark"] .badge-missed { background: #3d2912; color: #fbbf24; border: 1px solid #5d3f18; }
+    
+    [data-theme="dark"] .toast-msg.success { background: #133821; color: #4ade80; border-color: #235936; }
+    [data-theme="dark"] .toast-msg.error { background: #3f1414; color: #f87171; border-color: #642020; }
+    
+    [data-theme="dark"] .btn-delete-row { border-color: #5f1e1e; color: #f87171; }
+    [data-theme="dark"] .btn-delete-row:hover { background: #3a1010; color: #fca5a5; }
+
+    [data-theme="dark"] input::placeholder, 
+    [data-theme="dark"] select::placeholder, 
+    [data-theme="dark"] textarea::placeholder { color: #6e8477; }
+
+    [data-theme="dark"] .fasting-timer-box {
+      background: linear-gradient(135deg, #0b140f 0%, #142219 100%);
+      border: 1px solid #233e2e;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+    [data-theme="dark"] .custom-dropdown-list {
+      background: var(--dropdown-bg);
+      border-color: rgba(61, 244, 135, 0.35);
+    }
+
+    /* RESPONSIVE LAYOUT */
+    @media (max-width: 920px) {
+      .metrics-summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 860px) {
+      .header-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      .header-user-nav-block {
+        width: 100%;
+        align-items: flex-start;
+      }
+      .nav-bar-four {
+        width: 100%;
+        overflow-x: auto;
+        padding-bottom: 2px;
+      }
+      .landing-grid, .field-grid.three {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 540px) {
+      .metrics-summary-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      .field-grid { grid-template-columns: 1fr; }
+      .actions, .actions button, .actions .button-link { width: 100%; }
+      .nav-tab { font-size: 0.74rem; padding: 5px 8px; }
+      .principle-row-card { flex-direction: column; gap: 6px; }
+      .fasting-controls-two button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- COMPACT HEADER WITH BRAND & THE 4-TAB NAVIGATION (VISIBLE ONLY AFTER LOGIN) -->
+  <header>
+    <div class="header-container">
+      <div class="brand-block">
+        <p class="eyebrow">Personal Health Companion</p>
+        <h1>Amerix Health Advisor</h1>
+        <p class="subtitle">Metabolic discipline, intermittent fasting, and biological tracking.</p>
+      </div>
+
+      <div class="header-user-nav-block">
+        <!-- User Status, Theme Toggle & Navigation Row -->
+        <div class="user-row">
+          <button type="button" id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle Light / Dark Mode" title="Switch between Light and Dark mode">
+            <span id="themeToggleIcon">🌙</span>
+            <span id="themeToggleText">Dark</span>
+          </button>
+          <div id="userBadge" class="user-badge" style="display: none;">
+            <span>👤 <strong id="headerUsername">Guest</strong></span>
+            <button type="button" id="btnSignOut">Sign out</button>
+          </div>
+          <div id="guestBadge" class="user-badge">
+            <span>👤 <em>Not signed in</em></span>
+            <button type="button" onclick="showAuthView('signin')">Log in</button>
+          </div>
+        </div>
+
+        <!-- THE 4 MENU ITEMS: VISIBLE ONLY AFTER LOGIN OR SIGN UP -->
+        <nav class="nav-bar-four" id="mainNavBar" aria-label="Main Navigation">
+          <button type="button" class="nav-tab active" id="navTabWelcome" onclick="showStep(1)">Welcome</button>
+          <button type="button" class="nav-tab" id="navTabDashboard" onclick="handleStepNav(3)">Dashboard and habits</button>
+          <button type="button" class="nav-tab" id="navTabFasting" onclick="handleStepNav('fasting')">Fasting and principles</button>
+          <button type="button" class="nav-tab" id="navTabSummary" onclick="handleStepNav(4)">Summary</button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 1: WELCOME & COMPACT "WHAT WE WILL HELP YOU TRACK" (FITS LAPTOP)      -->
+    <!-- ========================================================================= -->
+    <div id="view-step-1" class="view-step active">
+      <div class="landing-grid">
+        <!-- Section 1: Welcome & Choices -->
+        <section class="panel" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <h2>Welcome to Amerix Health Advisor</h2>
+            <p class="desc">Take control of your biological markers, hormones, and longevity with structured fasting, hydration, and daily habit tracking.</p>
+            <p style="font-size: 0.88rem; margin-bottom: 10px; font-weight: 600;">Choose an option below to access your dashboard:</p>
+          </div>
+          <div class="actions">
+            <button type="button" id="btnChooseSignIn" class="primary-large" style="flex: 1;">Log In</button>
+            <button type="button" id="btnChooseSignUp" class="button-link secondary primary-large" style="flex: 1;">Create Account</button>
+          </div>
+        </section>
+
+        <!-- Section 2: Compact "What We Will Help You Track" (Reduced for Laptop Viewport) -->
+        <section class="panel">
+          <h2>What We Will Help You Track</h2>
+          <p class="desc" style="margin-bottom: 8px;">A focused, biological approach to metabolic optimization:</p>
+          <ul class="compact-track-list">
+            <li class="compact-track-item">
+              <span class="compact-track-icon">⚖️</span>
+              <div><strong>Body Mass Index:</strong> <span>Target healthy weight and track unfatting progress.</span></div>
+            </li>
+            <li class="compact-track-item">
+              <span class="compact-track-icon">⏳</span>
+              <div><strong>Fasting Protocols:</strong> <span>Live timer for OMAD, 2MAD & autophagy marathons.</span></div>
+            </li>
+            <li class="compact-track-item">
+              <span class="compact-track-icon">💧</span>
+              <div><strong>Saline Hydration:</strong> <span>8–10 glasses daily with mineral electrolyte balance.</span></div>
+            </li>
+            <li class="compact-track-item">
+              <span class="compact-track-icon">🚶‍♂️</span>
+              <div><strong>Daily Movement:</strong> <span>Hit 10,000 steps daily to burn glycogen and lower cortisol.</span></div>
+            </li>
+            <li class="compact-track-item">
+              <span class="compact-track-icon">🌙</span>
+              <div><strong>Sleep Rhythm:</strong> <span>7–9 hours restorative sleep to optimize growth hormone.</span></div>
+            </li>
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 2: AUTHENTICATION (LOG IN OR SIGN UP DEPENDING ON PREVIOUS CHOICE)   -->
+    <!-- ========================================================================= -->
+    <div id="view-step-2" class="view-step">
+      <div style="max-width: 480px; margin: 0 auto;">
+
+        <!-- Sign In Card -->
+        <section class="panel" id="authSignInCard">
+          <h2>Welcome Back</h2>
+          <p class="desc">Sign in with your username to access your health dashboard and logs.</p>
+          <div id="signInToast" class="toast-msg"></div>
+          <form id="signInForm">
+            <label for="loginUsername">Username
+              <input type="text" id="loginUsername" name="loginUsername" placeholder="e.g. JohnDoe" required>
+            </label>
+            <label for="loginPassword">Password
+              <input type="password" id="loginPassword" name="loginPassword" placeholder="••••••••" required>
+            </label>
+            <div class="actions">
+              <button type="submit" style="width: 100%;">Sign In</button>
+            </div>
+            <p class="switch-link">
+              Don't have an account? <a id="linkSwitchToSignUp">Create one now</a>
+            </p>
+            <p class="switch-link" style="margin-top: 4px;">
+              <a onclick="showStep(1)" style="color: var(--muted); text-decoration: none;">← Back to Welcome</a>
+            </p>
+          </form>
+        </section>
+
+        <!-- Sign Up Card -->
+        <section class="panel" id="authSignUpCard" style="display: none;">
+          <h2>Create Your Account</h2>
+          <p class="desc">Set up your profile to start logging habits and receiving tailored advice.</p>
+          <div id="signUpToast" class="toast-msg"></div>
+          <form id="signUpForm">
+            <label for="regEmail">Email
+              <input type="email" id="regEmail" name="regEmail" placeholder="you@example.com" required>
+            </label>
+            <label for="regUsername">Create Username
+              <input type="text" id="regUsername" name="regUsername" placeholder="Choose a username" required>
+            </label>
+            <label for="regPassword">Create Password
+              <input type="password" id="regPassword" name="regPassword" placeholder="At least 4 characters" required>
+            </label>
+            <div class="actions">
+              <button type="submit" style="width: 100%;">Create Account</button>
+            </div>
+            <p class="switch-link">
+              Already have an account? <a id="linkSwitchToSignIn">Sign In</a>
+            </p>
+            <p class="switch-link" style="margin-top: 4px;">
+              <a onclick="showStep(1)" style="color: var(--muted); text-decoration: none;">← Back to Welcome</a>
+            </p>
+          </form>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 3: DASHBOARD & HEALTH HABITS LOG ONLY (NO RADIOS MARKED BY DEFAULT)   -->
+    <!-- ========================================================================= -->
+    <div id="view-step-3" class="view-step">
+      <form id="combinedTrackingForm">
+
+        <!-- Baseline Health Data -->
+        <section class="panel">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <div>
+              <h2>Dashboard & Baseline Health</h2>
+              <p class="desc">Welcome, <strong id="dashboardGreetingUser">User</strong>. Add your baseline vitals to compute your metabolic baseline.</p>
+            </div>
+            <div id="liveBmiTag" class="bmi-badge bmi-normal" style="font-size: 0.85rem; padding: 4px 10px; display: none;">
+              BMI: <span id="liveBmiVal">--</span>
+            </div>
+          </div>
+
+          <div class="field-grid three">
+            <label for="weightInput">Weight (kg)
+              <span class="hint">e.g. 78.5</span>
+              <input type="number" id="weightInput" min="20" max="350" step="0.1" required>
+            </label>
+            <label for="heightInput">Height (cm)
+              <span class="hint">e.g. 178</span>
+              <input type="number" id="heightInput" min="80" max="260" step="0.1" required>
+            </label>
+            <label for="ageInput">Age (years)
+              <span class="hint">e.g. 32</span>
+              <input type="number" id="ageInput" min="12" max="120" required>
+            </label>
+          </div>
+        </section>
+
+        <!-- Healthy Habits Log with Unchecked Radios by Default -->
+        <section class="panel">
+          <h2>Healthy Habits Log</h2>
+          <p class="desc">Record the habits that shape your day. Submitting will update your vitals and load Your Summary.</p>
+
+          <div class="field-grid">
+            <label for="sleepInput">Sleep (hours)
+              <span class="hint">Optimal: 7 – 9 hours</span>
+              <input id="sleepInput" type="number" min="0" max="24" step="0.1" required>
+            </label>
+            <label for="waterInput">Water Intake (glasses)
+              <span class="hint">1 glass ~ 250ml. Target: 8 – 12</span>
+              <input id="waterInput" type="number" min="0" max="40" required>
+            </label>
+            <label for="stepsInput">Daily Steps
+              <span class="hint">Amerix target: 8,000 – 10,000+</span>
+              <input id="stepsInput" type="number" min="0" max="100000" step="100" required>
+            </label>
+
+            <!-- Exactly the 5 requested protocols, none marked by default -->
+            <fieldset>
+              <legend>Fasting Protocol</legend>
+              <div class="radio-options">
+                <label><input type="radio" value="OMAD (24 hours)" name="fastingProtocol" required> OMAD (24 hours)</label>
+                <label><input type="radio" value="2MAD (20:4, 18:6 or 14:8)" name="fastingProtocol" required> 2MAD (20:4, 18:6 or 14:8)</label>
+                <label><input type="radio" value="Autophagy Marathon (48 Hours)" name="fastingProtocol" required> Autophagy Marathon (48 Hours)</label>
+                <label><input type="radio" value="Extended (72 Hours)" name="fastingProtocol" required> Extended (72 Hours)</label>
+                <label><input type="radio" value="Not fasting" name="fastingProtocol" required> Not fasting</label>
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="actions" style="margin-top: 18px;">
+            <button type="submit" class="primary-large" style="width: 100%;">
+              💾 Submit Entry & View Summary →
+            </button>
+          </div>
+        </section>
+      </form>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW SEPARATE: FASTING TRACKER (CUSTOM DROPDOWN + START & FINISH)         -->
+    <!-- ========================================================================= -->
+    <div id="view-step-fasting" class="view-step">
+
+      <!-- Interactive Fasting Tracker: User chooses protocol and when to START -->
+      <section class="fasting-timer-box">
+        <div class="fasting-header">
+          <div>
+            <h3>⏱️ Live Intermittent Fasting Tracker</h3>
+            <p style="margin: 2px 0 0; color: #d4ebd7; font-size: 0.84rem;">Select your fasting protocol, click START, and tap FINISH when breaking your fast.</p>
+          </div>
+
+          <!-- CUSTOM STYLED DROPDOWN WITH PROPER HOVERING EFFECTS -->
+          <div class="custom-dropdown-container" id="customDropdownContainer">
+            <button type="button" class="dropdown-trigger-btn" id="dropdownTriggerBtn" aria-haspopup="listbox" aria-expanded="false">
+              <span style="display: flex; align-items: center; gap: 8px;">
+                <span id="selectedProtoIcon">🔥</span>
+                <span id="selectedProtoTitle">OMAD (24 hours)</span>
+              </span>
+              <span class="dropdown-arrow-icon">▼</span>
+            </button>
+
+            <div class="custom-dropdown-list" id="customDropdownList" role="listbox">
+              <div class="dropdown-opt-item selected" data-hours="24" data-name="OMAD (24 hours)" data-icon="🔥" role="option">
+                <div class="opt-info">
+                  <span class="opt-icon">🔥</span>
+                  <div>
+                    <div class="opt-title">OMAD (24 hours)</div>
+                    <div class="opt-desc">One Meal A Day · Flatline insulin & fat oxidation</div>
+                  </div>
+                </div>
+                <span class="opt-badge">24h</span>
+              </div>
+
+              <div class="dropdown-opt-item" data-hours="20" data-name="2MAD (20:4, 18:6 or 14:8)" data-icon="⚡" role="option">
+                <div class="opt-info">
+                  <span class="opt-icon">⚡</span>
+                  <div>
+                    <div class="opt-title">2MAD (20:4, 18:6 or 14:8)</div>
+                    <div class="opt-desc">Two Meals · Athletic strength & clean recovery</div>
+                  </div>
+                </div>
+                <span class="opt-badge">20h</span>
+              </div>
+
+              <div class="dropdown-opt-item" data-hours="48" data-name="Autophagy Marathon (48 Hours)" data-icon="🧬" role="option">
+                <div class="opt-info">
+                  <span class="opt-icon">🧬</span>
+                  <div>
+                    <div class="opt-title">Autophagy Marathon (48 Hours)</div>
+                    <div class="opt-desc">Cellular Renewal · Clears out senescent cells</div>
+                  </div>
+                </div>
+                <span class="opt-badge">48h</span>
+              </div>
+
+              <div class="dropdown-opt-item" data-hours="72" data-name="Extended (72 Hours)" data-icon="🛡️" role="option">
+                <div class="opt-info">
+                  <span class="opt-icon">🛡️</span>
+                  <div>
+                    <div class="opt-title">Extended (72 Hours)</div>
+                    <div class="opt-desc">Immune Reset · Deep stem cell regeneration</div>
+                  </div>
+                </div>
+                <span class="opt-badge">72h</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fasting-timer-display" id="fastingTimerDisplay">00:00:00</div>
+        <div class="fasting-status-label" id="fastingStatusLabel">Choose your fasting protocol and click START to begin.</div>
+
+        <div class="fasting-progress-track">
+          <div class="fasting-progress-bar" id="fastingProgressBar"></div>
+        </div>
+
+        <!-- TWO BUTTONS: "START" AND "FINISH". CANNOT START OVER WHILE RUNNING -->
+        <div class="fasting-controls-two">
+          <button type="button" id="btnStartFast">START</button>
+          <button type="button" id="btnFinishFast" disabled>FINISH</button>
+        </div>
+
+        <!-- FASTING COMPLETION RESULT CARD (DISPLAYS WHETHER GOAL WAS MET & PROTOCOL-SPECIFIC ADVICE) -->
+        <div class="fast-completion-card" id="fastCompletionCard">
+          <div class="completion-header">
+            <h4 style="margin: 0; font-size: 1.1rem; color: var(--deep-green);" id="completionCardTitle">Fast Finished</h4>
+            <span class="completion-status-badge badge-met" id="completionStatusBadge">Goal Achieved</span>
+          </div>
+
+          <div class="completion-metrics-row">
+            <div>Protocol: <strong id="resProtocolName">OMAD (24 hours)</strong></div>
+            <div>Target: <strong id="resTargetDuration">24h 00m</strong></div>
+            <div>Actual Time: <strong id="resActualDuration">00:00:00</strong></div>
+            <div>Achievement: <strong id="resPctAchieved">100%</strong></div>
+          </div>
+
+          <p class="completion-advice-text" id="resAdviceText">
+            <!-- Tailored message will appear here -->
+          </p>
+
+          <div style="text-align: right;">
+            <button type="button" class="secondary" id="btnDismissResult" style="padding: 5px 14px; font-size: 0.8rem; min-height: 34px;">
+              ✓ Got It / Dismiss
+            </button>
+          </div>
+        </div>
+
+        <div class="saline-tip">
+          <span style="font-size: 1.15rem;">🧂</span>
+          <span><strong>Amerix Fasting Rule:</strong> When fasting past 16 hours or feeling lightheaded, drink lukewarm water with a pinch of pure Himalayan rock salt. Never break a fast with refined carbohydrates or sugar.</span>
+        </div>
+      </section>
+
+      <!-- Non-Negotiable Rules in DISPLAY FLEX COLUMN -->
+      <section class="panel">
+        <h2>Amerix's 5 Non-Negotiable Health Principles</h2>
+        <p class="desc">Master these biological fundamentals to eliminate chronic fatigue, optimize hormones, and unfat your body.</p>
+
+        <div class="principles-flex-column">
+          <div class="principle-row-card">
+            <div class="principle-row-icon">🔥</div>
+            <div class="principle-row-content">
+              <h4>1. Fasting & Autophagy</h4>
+              <p>Give your digestive system complete rest. Fasting triggers autophagy—cellular cleanup where your body scavenges and recycles damaged, senescent cells and excess visceral fat.</p>
+            </div>
+          </div>
+
+          <div class="principle-row-card">
+            <div class="principle-row-icon">🚫</div>
+            <div class="principle-row-content">
+              <h4>2. Zero Seed Oils & Sugars</h4>
+              <p>Eliminate canola, vegetable, corn, and sunflower oils. Cook exclusively with grass-fed tallow, butter, or ghee. Refined sugar is a metabolic toxin that destroys liver function.</p>
+            </div>
+          </div>
+
+          <div class="principle-row-card">
+            <div class="principle-row-icon">☀️</div>
+            <div class="principle-row-content">
+              <h4>3. Morning Sun & Early Sleep (9:30 PM)</h4>
+              <p>Expose your eyes and skin to natural morning sunlight within 30 minutes of waking. Be in bed by 9:30 PM in total darkness to maximize nocturnal human growth hormone release.</p>
+            </div>
+          </div>
+
+          <div class="principle-row-card">
+            <div class="principle-row-icon">🏋️</div>
+            <div class="principle-row-content">
+              <h4>4. Heavy Resistance Training & 10,000 Steps</h4>
+              <p>Squat, deadlift, and press heavy weights 3 times a week. Accumulate 10,000 daily steps. Dense skeletal muscle is your premier metabolic sink and longevity shield.</p>
+            </div>
+          </div>
+
+          <div class="principle-row-card">
+            <div class="principle-row-icon">💧</div>
+            <div class="principle-row-content">
+              <h4>5. Saline Hydration & Cold Showers</h4>
+              <p>Plain distilled water flushes electrolytes out of your cells. Add natural rock or sea salt to your water. Take cold showers daily to sharpen dopaminergic resilience and activate brown fat.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 4: COMPACT & MOBILE-RESPONSIVE "YOUR SUMMARY"                        -->
+    <!-- ========================================================================= -->
+    <div id="view-step-4" class="view-step">
+      <section class="panel" style="padding: clamp(14px, 2vw, 20px);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+          <div>
+            <h2 style="font-size: clamp(1.4rem, 2.5vw, 1.9rem); margin: 0 0 2px;">Your Summary</h2>
+            <p class="desc" style="margin: 0; font-size: 0.85rem;">Latest biological markers and recorded habits.</p>
+          </div>
+          <div>
+            <button type="button" class="secondary" onclick="showStep(3)" style="padding: 5px 12px; font-size: 0.82rem; min-height: 36px;">
+              ← Log Another Day
+            </button>
+          </div>
+        </div>
+
+        <!-- Compressed Visual Progress Indicators -->
+        <div class="metrics-summary-grid">
+          <!-- BMI Card -->
+          <div class="metric-card">
+            <div class="metric-label">
+              <span>BMI</span>
+              <span id="summaryBmiBadge" class="bmi-badge bmi-normal">--</span>
+            </div>
+            <div class="metric-value" id="summaryBmiVal">--</div>
+            <div class="metric-progress">
+              <div class="metric-progress-fill" id="summaryBmiFill" style="width: 50%;"></div>
+            </div>
+            <div class="metric-note" id="summaryBmiNote">Normal: 18.5 – 24.9</div>
+          </div>
+
+          <!-- Daily Steps Card -->
+          <div class="metric-card">
+            <div class="metric-label">
+              <span>Steps</span>
+              <span id="summaryStepsPct" style="color: var(--green); font-weight: 800;">0%</span>
+            </div>
+            <div class="metric-value" id="summaryStepsVal">0</div>
+            <div class="metric-progress">
+              <div class="metric-progress-fill" id="summaryStepsFill" style="width: 0%;"></div>
+            </div>
+            <div class="metric-note">Goal: 10,000 steps</div>
+          </div>
+
+          <!-- Water Intake Card -->
+          <div class="metric-card">
+            <div class="metric-label">
+              <span>Water</span>
+              <span id="summaryWaterPct" style="color: var(--green); font-weight: 800;">0%</span>
+            </div>
+            <div class="metric-value" id="summaryWaterVal">0 <span style="font-size: 0.88rem; font-weight: 600;">glasses</span></div>
+            <div class="metric-progress">
+              <div class="metric-progress-fill" id="summaryWaterFill" style="width: 0%;"></div>
+            </div>
+            <div class="metric-note">Target: 8+ glasses</div>
+          </div>
+
+          <!-- Sleep Recovery Card -->
+          <div class="metric-card">
+            <div class="metric-label">
+              <span>Sleep</span>
+              <span id="summarySleepScore" style="color: var(--green); font-weight: 800;">--</span>
+            </div>
+            <div class="metric-value" id="summarySleepVal">0 <span style="font-size: 0.88rem; font-weight: 600;">hrs</span></div>
+            <div class="metric-progress">
+              <div class="metric-progress-fill" id="summarySleepFill" style="width: 0%;"></div>
+            </div>
+            <div class="metric-note">Optimal: 7 – 9 hours</div>
+          </div>
+        </div>
+
+        <!-- Protocol & Timestamp Banner -->
+        <div style="background: var(--light-mint); border: 1px solid var(--line); border-radius: 7px; padding: 8px 12px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px;">
+          <div>
+            <span style="font-size: 0.74rem; text-transform: uppercase; font-weight: 800; color: var(--deep-green); letter-spacing: 0.05em;">Protocol: </span>
+            <strong style="font-size: 0.94rem; color: var(--ink);" id="summaryProtocolVal">None selected</strong>
+          </div>
+          <span style="font-size: 0.78rem; color: var(--muted);" id="summaryTimestamp">Logged: Just now</span>
+        </div>
+
+        <!-- Habits History Table & Data Management -->
+        <div style="margin-top: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; margin-bottom: 6px;">
+            <h3 style="margin: 0; font-size: 1rem;">Habits History</h3>
+            <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+              <button type="button" id="btnExportCsv" class="secondary" style="padding: 4px 9px; font-size: 0.76rem; min-height: 32px;">
+                📥 CSV
+              </button>
+              <button type="button" id="btnExportJson" class="secondary" style="padding: 4px 9px; font-size: 0.76rem; min-height: 32px;">
+                💾 JSON
+              </button>
+              <button type="button" id="btnClearHistory" class="danger" style="padding: 4px 9px; font-size: 0.76rem; min-height: 32px;">
+                🗑️ Clear
+              </button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Sleep</th>
+                  <th>Water</th>
+                  <th>Steps</th>
+                  <th>Fasting Protocol</th>
+                  <th>BMI</th>
+                  <th style="text-align: right;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="historyTableBody">
+                <tr><td colspan="7" class="cell-empty" style="text-align: center; color: var(--muted); padding: 16px;">No habits logged yet. Record your day in Dashboard and habits.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- "See Advice" Button Leading to the Advice Page -->
+        <div style="text-align: center; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line);">
+          <p style="color: var(--muted); margin-bottom: 8px; font-size: 0.88rem;">Review your personalized health prescription based on these results:</p>
+          <button type="button" id="btnSeeAdvice" class="primary-large" style="padding: 11px 32px; font-size: 1.05rem;">
+            🔥 See Advice →
+          </button>
+        </div>
+
+      </section>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 5: THE ADVICE PAGE (NO DR ERIC AMUNGA NAME)                          -->
+    <!-- ========================================================================= -->
+    <div id="view-step-5" class="view-step">
+      <section class="panel" style="border-left: 6px solid var(--deep-green);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+          <div>
+            <h2 id="adviceHeaderTitle" style="font-size: clamp(1.4rem, 2.5vw, 1.95rem); margin: 0 0 2px;">Amerix's Direct Advice</h2>
+            <p id="adviceSubtitle" class="desc" style="margin: 0; font-size: 0.86rem;">Unvarnished coaching and health prescriptions tailored to your latest metrics.</p>
+          </div>
+          <div>
+            <button type="button" class="secondary" onclick="showStep(4)" style="padding: 5px 12px; font-size: 0.82rem; min-height: 36px;">
+              ← Back to Your Summary
+            </button>
+          </div>
+        </div>
+
+        <div class="advice-container" id="adviceContainer">
+          <!-- Dynamically populated advice cards -->
+        </div>
+
+        <!-- Quote with Dr Eric Amunga removed -->
+        <div class="amerix-quote-box">
+          <p>"A weak body produces a weak mind. Unfat yourself, fast daily, lift heavy, sleep like a stone, and take responsibility for your existence."</p>
+          <span>— Amerix</span>
+        </div>
+
+        <div class="actions center" style="margin-top: 22px;">
+          <button type="button" onclick="showStep(3)" class="primary-large">
+            ✍️ Log Another Day in Dashboard
+          </button>
+          <button type="button" onclick="showStep(4)" class="secondary primary-large">
+            📊 Review Your Summary
+          </button>
+        </div>
+      </section>
+    </div>
+
+  </main>
+
+  <footer>
+    Amerix Health Advisor &copy; 2026. Built for metabolic health, intermittent fasting, and biological tracking.
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT LOGIC                                                          -->
+  <!-- ========================================================================= -->
+  <script>
+    // --- STORAGE KEYS ---
+    const STORAGE_KEYS = {
+      USERS: 'aha_users_v2',
+      ACTIVE_USER: 'aha_active_user_v2',
+      HEALTH_DATA: 'aha_health_data_v2',
+      HABITS: 'aha_habits_history_v2',
+      FASTING_TIMER: 'aha_fasting_timer_v2',
+      THEME: 'aha_theme'
+    };
+
+    // --- THEME ENGINE (LIGHT: ACID MINT + MIST GRAY | DARK: INKBERRY + FOREST GRAPHITE) ---
+    (function applyEarlyTheme() {
+      try {
+        const saved = localStorage.getItem('aha_theme');
+        const systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const initial = saved || (systemDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', initial);
+      } catch (e) {}
+    })();
+
+    function initTheme() {
+      const savedTheme = localStorage.getItem(STORAGE_KEYS.THEME);
+      const systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme = savedTheme || (systemDark ? 'dark' : 'light');
+      applyTheme(theme);
+
+      const toggleBtn = document.getElementById('themeToggleBtn');
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+          const current = document.documentElement.getAttribute('data-theme') || 'light';
+          const next = current === 'dark' ? 'light' : 'dark';
+          applyTheme(next);
+          localStorage.setItem(STORAGE_KEYS.THEME, next);
+        });
+      }
+
+      // Automatically respond to OS dark mode change if user hasn't chosen manually
+      if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+          if (!localStorage.getItem(STORAGE_KEYS.THEME)) {
+            applyTheme(e.matches ? 'dark' : 'light');
+          }
+        });
+      }
+    }
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      const icon = document.getElementById('themeToggleIcon');
+      const text = document.getElementById('themeToggleText');
+      const btn = document.getElementById('themeToggleBtn');
+
+      if (theme === 'dark') {
+        if (icon) icon.textContent = '☀️';
+        if (text) text.textContent = 'Light';
+        if (btn) btn.title = 'Switch to Light Mode (Acid Mint & Mist Gray)';
+      } else {
+        if (icon) icon.textContent = '🌙';
+        if (text) text.textContent = 'Dark';
+        if (btn) btn.title = 'Switch to Dark Mode (Inkberry & Forest Graphite)';
+      }
+    }
+
+    // --- STATE ENGINE ---
+    const appState = {
+      currentView: '1',
+      users: loadStorage(STORAGE_KEYS.USERS, []),
+      activeUser: loadStorage(STORAGE_KEYS.ACTIVE_USER, null),
+      healthData: loadStorage(STORAGE_KEYS.HEALTH_DATA, null),
+      habits: loadStorage(STORAGE_KEYS.HABITS, []),
+      fastingTimer: loadStorage(STORAGE_KEYS.FASTING_TIMER, {
+        isRunning: false,
+        startTime: null,
+        targetHours: 24,
+        protocolName: 'OMAD (24 hours)',
+        protocolIcon: '🔥',
+        finishedDuration: null
+      })
+    };
+
+    function loadStorage(key, fallback) {
+      try {
+        const item = localStorage.getItem(key);
+        return item ? JSON.parse(item) : fallback;
+      } catch (e) {
+        console.error('Error reading localStorage key', key, e);
+        return fallback;
+      }
+    }
+
+    function saveStorage(key, data) {
+      try {
+        localStorage.setItem(key, JSON.stringify(data));
+      } catch (e) {
+        console.error('Error writing localStorage key', key, e);
+      }
+    }
+
+    // --- 4-TAB NAVIGATION & VIEW ROUTER ---
+    function showStep(targetView) {
+      const viewStr = String(targetView);
+
+      // Auth validation for protected areas
+      if ((viewStr === '3' || viewStr === '4' || viewStr === '5' || viewStr === 'fasting') && !appState.activeUser) {
+        showAuthView('signin');
+        showToast('signInToast', 'Please sign in or create an account first.', 'error');
+        return;
+      }
+
+      appState.currentView = viewStr;
+
+      // Hide all views
+      const views = ['view-step-1', 'view-step-2', 'view-step-3', 'view-step-fasting', 'view-step-4', 'view-step-5'];
+      views.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('active');
+      });
+
+      // Reset active tabs
+      const tabs = ['navTabWelcome', 'navTabDashboard', 'navTabFasting', 'navTabSummary'];
+      tabs.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('active');
+      });
+
+      // Show target view & highlight the corresponding tab
+      if (viewStr === '1') {
+        document.getElementById('view-step-1').classList.add('active');
+        document.getElementById('navTabWelcome').classList.add('active');
+      } else if (viewStr === '2') {
+        document.getElementById('view-step-2').classList.add('active');
+        document.getElementById('navTabWelcome').classList.add('active');
+      } else if (viewStr === '3') {
+        document.getElementById('view-step-3').classList.add('active');
+        document.getElementById('navTabDashboard').classList.add('active');
+        populateDashboardFields();
+      } else if (viewStr === 'fasting') {
+        document.getElementById('view-step-fasting').classList.add('active');
+        document.getElementById('navTabFasting').classList.add('active');
+        updateTimerDisplay();
+      } else if (viewStr === '4') {
+        document.getElementById('view-step-4').classList.add('active');
+        document.getElementById('navTabSummary').classList.add('active');
+        renderSummaryView();
+      } else if (viewStr === '5') {
+        document.getElementById('view-step-5').classList.add('active');
+        document.getElementById('navTabSummary').classList.add('active');
+        renderAdviceView();
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function handleStepNav(target) {
+      if ((target === 3 || target === 4 || target === 'fasting') && !appState.activeUser) {
+        showAuthView('signin');
+        showToast('signInToast', 'Sign in to access this section.', 'error');
+        return;
+      }
+      showStep(target);
+    }
+
+    // --- AUTHENTICATION & NAV VISIBILITY (ONLY VISIBLE WHEN LOGGED IN) ---
+    function showAuthView(type) {
+      showStep(2);
+      const signInCard = document.getElementById('authSignInCard');
+      const signUpCard = document.getElementById('authSignUpCard');
+
+      if (type === 'signup') {
+        signInCard.style.display = 'none';
+        signUpCard.style.display = 'block';
+      } else {
+        signInCard.style.display = 'block';
+        signUpCard.style.display = 'none';
+      }
+    }
+
+    function updateAuthHeaderUI() {
+      const userBadge = document.getElementById('userBadge');
+      const guestBadge = document.getElementById('guestBadge');
+      const headerUsername = document.getElementById('headerUsername');
+      const dashboardGreetingUser = document.getElementById('dashboardGreetingUser');
+      const mainNavBar = document.getElementById('mainNavBar');
+
+      if (appState.activeUser) {
+        userBadge.style.display = 'inline-flex';
+        guestBadge.style.display = 'none';
+        headerUsername.textContent = appState.activeUser.username;
+        if (dashboardGreetingUser) dashboardGreetingUser.textContent = appState.activeUser.username;
+        
+        // Navigation menu ONLY visible after user has signed up or logged in
+        if (mainNavBar) mainNavBar.style.display = 'flex';
+      } else {
+        userBadge.style.display = 'none';
+        guestBadge.style.display = 'inline-flex';
+        
+        // Navigation menu hidden when not logged in
+        if (mainNavBar) mainNavBar.style.display = 'none';
+      }
+    }
+
+    function showToast(elemId, message, type = 'success') {
+      const el = document.getElementById(elemId);
+      if (!el) return;
+      el.textContent = message;
+      el.className = `toast-msg ${type}`;
+      setTimeout(() => {
+        el.className = 'toast-msg';
+      }, 5000);
+    }
+
+    // Sign In handler
+    document.getElementById('signInForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const username = document.getElementById('loginUsername').value.trim();
+      const password = document.getElementById('loginPassword').value;
+
+      const user = appState.users.find(u => u.username.toLowerCase() === username.toLowerCase() && u.password === password);
+
+      if (!user) {
+        showToast('signInToast', 'Invalid username or password. Please verify or create an account.', 'error');
+        return;
+      }
+
+      appState.activeUser = { username: user.username, email: user.email };
+      saveStorage(STORAGE_KEYS.ACTIVE_USER, appState.activeUser);
+      updateAuthHeaderUI();
+      document.getElementById('signInForm').reset();
+      showToast('signInToast', `Welcome back, ${user.username}! Loading dashboard...`, 'success');
+
+      setTimeout(() => {
+        showStep(3); // Cascades to Dashboard and habits
+      }, 450);
+    });
+
+    // Sign Up handler
+    document.getElementById('signUpForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('regEmail').value.trim();
+      const username = document.getElementById('regUsername').value.trim();
+      const password = document.getElementById('regPassword').value;
+
+      if (password.length < 4) {
+        showToast('signUpToast', 'Password must be at least 4 characters.', 'error');
+        return;
+      }
+
+      const existing = appState.users.find(u => u.username.toLowerCase() === username.toLowerCase() || u.email.toLowerCase() === email.toLowerCase());
+      if (existing) {
+        showToast('signUpToast', 'An account with that username or email already exists.', 'error');
+        return;
+      }
+
+      const newUser = { email, username, password, createdAt: new Date().toISOString() };
+      appState.users.push(newUser);
+      saveStorage(STORAGE_KEYS.USERS, appState.users);
+
+      appState.activeUser = { username, email };
+      saveStorage(STORAGE_KEYS.ACTIVE_USER, appState.activeUser);
+      updateAuthHeaderUI();
+      document.getElementById('signUpForm').reset();
+      showToast('signUpToast', 'Account created! Loading your dashboard...', 'success');
+
+      setTimeout(() => {
+        showStep(3); // Cascades to Dashboard and habits
+      }, 450);
+    });
+
+    // Sign Out handler
+    document.getElementById('btnSignOut').addEventListener('click', () => {
+      if (confirm('Are you sure you want to sign out?')) {
+        appState.activeUser = null;
+        saveStorage(STORAGE_KEYS.ACTIVE_USER, null);
+        updateAuthHeaderUI();
+        showStep(1);
+      }
+    });
+
+    // Landing Page Buttons
+    document.getElementById('btnChooseSignIn').addEventListener('click', () => showAuthView('signin'));
+    document.getElementById('btnChooseSignUp').addEventListener('click', () => showAuthView('signup'));
+    document.getElementById('linkSwitchToSignUp').addEventListener('click', () => showAuthView('signup'));
+    document.getElementById('linkSwitchToSignIn').addEventListener('click', () => showAuthView('signin'));
+
+    // --- DASHBOARD & HABITS LOG (VIEW 3) ---
+    function populateDashboardFields() {
+      if (appState.activeUser) {
+        document.getElementById('dashboardGreetingUser').textContent = appState.activeUser.username;
+      }
+      if (appState.healthData) {
+        if (appState.healthData.weight) document.getElementById('weightInput').value = appState.healthData.weight;
+        if (appState.healthData.height) document.getElementById('heightInput').value = appState.healthData.height;
+        if (appState.healthData.age) document.getElementById('ageInput').value = appState.healthData.age;
+        updateLiveBmiPreview();
+      }
+    }
+
+    function calculateBmi(weightKg, heightCm) {
+      if (!weightKg || !heightCm || heightCm <= 0) return 0;
+      const heightM = heightCm / 100;
+      return Number((weightKg / (heightM * heightM)).toFixed(1));
+    }
+
+    function getBmiCategory(bmi) {
+      if (!bmi || bmi <= 0) return { label: 'Not set', className: 'bmi-normal' };
+      if (bmi < 18.5) return { label: 'Underweight', className: 'bmi-under' };
+      if (bmi < 25.0) return { label: 'Normal / Healthy', className: 'bmi-normal' };
+      if (bmi < 30.0) return { label: 'Overweight', className: 'bmi-over' };
+      return { label: 'Obese (Unfatting Required)', className: 'bmi-obese' };
+    }
+
+    function updateLiveBmiPreview() {
+      const weight = Number(document.getElementById('weightInput').value);
+      const height = Number(document.getElementById('heightInput').value);
+      const tag = document.getElementById('liveBmiTag');
+      const val = document.getElementById('liveBmiVal');
+
+      if (weight > 20 && height > 80) {
+        const bmi = calculateBmi(weight, height);
+        const cat = getBmiCategory(bmi);
+        val.textContent = `${bmi} (${cat.label})`;
+        tag.className = `bmi-badge ${cat.className}`;
+        tag.style.display = 'inline-block';
+      } else {
+        tag.style.display = 'none';
+      }
+    }
+
+    document.getElementById('weightInput').addEventListener('input', updateLiveBmiPreview);
+    document.getElementById('heightInput').addEventListener('input', updateLiveBmiPreview);
+
+    // Form submission: requires user to pick one radio
+    document.getElementById('combinedTrackingForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const fastingProtocolRadio = document.querySelector('input[name="fastingProtocol"]:checked');
+      if (!fastingProtocolRadio) {
+        alert('Please select a fasting protocol.');
+        return;
+      }
+      const fastingProtocol = fastingProtocolRadio.value;
+
+      const weight = Number(document.getElementById('weightInput').value);
+      const height = Number(document.getElementById('heightInput').value);
+      const age = Number(document.getElementById('ageInput').value);
+      const bmi = calculateBmi(weight, height);
+
+      // Save baseline data
+      appState.healthData = { weight, height, age, bmi, lastUpdated: new Date().toISOString() };
+      saveStorage(STORAGE_KEYS.HEALTH_DATA, appState.healthData);
+
+      // Habit log
+      const sleep = Number(document.getElementById('sleepInput').value);
+      const water = Number(document.getElementById('waterInput').value);
+      const steps = Number(document.getElementById('stepsInput').value);
+
+      const habitEntry = {
+        id: 'hab_' + Date.now(),
+        timestamp: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        sleep,
+        water,
+        steps,
+        fastingProtocol,
+        bmi: bmi || 'N/A',
+        weight
+      };
+
+      appState.habits.push(habitEntry);
+      saveStorage(STORAGE_KEYS.HABITS, appState.habits);
+
+      // Reset habits inputs
+      document.getElementById('sleepInput').value = '';
+      document.getElementById('waterInput').value = '';
+      document.getElementById('stepsInput').value = '';
+
+      // Uncheck radio selection for fresh entries
+      document.querySelectorAll('input[name="fastingProtocol"]').forEach(r => r.checked = false);
+
+      // Loads and takes user to Summary
+      showStep(4);
+    });
+
+    // --- YOUR SUMMARY (VIEW 4) ---
+    function renderSummaryView() {
+      const latestHabit = appState.habits.length > 0 ? appState.habits[appState.habits.length - 1] : null;
+      const health = appState.healthData || {};
+
+      // BMI Metric
+      const bmi = health.bmi || (latestHabit && typeof latestHabit.bmi === 'number' ? latestHabit.bmi : 0);
+      const bmiValEl = document.getElementById('summaryBmiVal');
+      const bmiBadgeEl = document.getElementById('summaryBmiBadge');
+      const bmiFillEl = document.getElementById('summaryBmiFill');
+      const bmiNoteEl = document.getElementById('summaryBmiNote');
+
+      if (bmi > 0) {
+        const cat = getBmiCategory(bmi);
+        bmiValEl.textContent = bmi.toFixed(1);
+        bmiBadgeEl.textContent = cat.label;
+        bmiBadgeEl.className = `bmi-badge ${cat.className}`;
+        const pct = Math.min(Math.max(((bmi - 15) / 20) * 100, 5), 100);
+        bmiFillEl.style.width = pct + '%';
+        if (bmi >= 25) {
+          bmiFillEl.style.background = '#f97316';
+          bmiNoteEl.textContent = 'Above optimal. Fasting advised.';
+        } else if (bmi < 18.5) {
+          bmiFillEl.style.background = '#eab308';
+          bmiNoteEl.textContent = 'Underweight. Prioritize animal fats & protein.';
+        } else {
+          bmiFillEl.style.background = 'var(--acid-mint)';
+          bmiNoteEl.textContent = 'Optimal range. Protect this frame.';
+        }
+      } else {
+        bmiValEl.textContent = 'Not set';
+        bmiBadgeEl.textContent = 'N/A';
+        bmiFillEl.style.width = '0%';
+        bmiNoteEl.textContent = 'Submit vitals on Dashboard.';
+      }
+
+      // Steps Metric
+      const steps = latestHabit ? latestHabit.steps : 0;
+      const stepsValEl = document.getElementById('summaryStepsVal');
+      const stepsPctEl = document.getElementById('summaryStepsPct');
+      const stepsFillEl = document.getElementById('summaryStepsFill');
+
+      stepsValEl.textContent = steps.toLocaleString();
+      const stepsPct = Math.min(Math.round((steps / 10000) * 100), 150);
+      stepsPctEl.textContent = stepsPct + '%';
+      stepsFillEl.style.width = Math.min(stepsPct, 100) + '%';
+      stepsFillEl.style.background = steps >= 10000 ? 'var(--acid-mint)' : (steps >= 8000 ? '#84cc16' : '#f97316');
+
+      // Water Metric
+      const water = latestHabit ? latestHabit.water : 0;
+      const waterValEl = document.getElementById('summaryWaterVal');
+      const waterPctEl = document.getElementById('summaryWaterPct');
+      const waterFillEl = document.getElementById('summaryWaterFill');
+
+      waterValEl.innerHTML = `${water} <span style="font-size: 0.88rem; font-weight: 600;">glasses</span>`;
+      const waterPct = Math.min(Math.round((water / 8) * 100), 150);
+      waterPctEl.textContent = waterPct + '%';
+      waterFillEl.style.width = Math.min(waterPct, 100) + '%';
+      waterFillEl.style.background = water >= 8 ? '#0284c7' : '#f97316';
+
+      // Sleep Metric
+      const sleep = latestHabit ? latestHabit.sleep : 0;
+      const sleepValEl = document.getElementById('summarySleepVal');
+      const sleepScoreEl = document.getElementById('summarySleepScore');
+      const sleepFillEl = document.getElementById('summarySleepFill');
+
+      sleepValEl.innerHTML = `${sleep} <span style="font-size: 0.88rem; font-weight: 600;">hrs</span>`;
+      if (sleep >= 7 && sleep <= 9) {
+        sleepScoreEl.textContent = 'Optimal (100%)';
+        sleepFillEl.style.width = '100%';
+        sleepFillEl.style.background = 'var(--acid-mint)';
+      } else if (sleep > 9) {
+        sleepScoreEl.textContent = 'High (>9h)';
+        sleepFillEl.style.width = '100%';
+        sleepFillEl.style.background = '#0284c7';
+      } else if (sleep >= 5) {
+        sleepScoreEl.textContent = 'Fair';
+        sleepFillEl.style.width = ((sleep / 8) * 100) + '%';
+        sleepFillEl.style.background = '#f97316';
+      } else {
+        sleepScoreEl.textContent = 'Poor (<5h)';
+        sleepFillEl.style.width = ((sleep / 8) * 100) + '%';
+        sleepFillEl.style.background = '#dc2626';
+      }
+
+      document.getElementById('summaryProtocolVal').textContent = latestHabit ? latestHabit.fastingProtocol : 'None selected';
+      document.getElementById('summaryTimestamp').textContent = latestHabit ? `Logged: ${latestHabit.timestamp}` : 'No entries yet';
+
+      renderHistoryTable();
+    }
+
+    function renderHistoryTable() {
+      const tbody = document.getElementById('historyTableBody');
+      if (!appState.habits.length) {
+        tbody.innerHTML = '<tr><td colspan="7" class="cell-empty" style="text-align: center; color: var(--muted); padding: 16px;">No habits logged yet. Record your day in Dashboard and habits.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = appState.habits.slice().reverse().map((entry) => `
+        <tr class="history-row">
+          <td class="cell-timestamp" data-label="Timestamp">
+            <span class="timestamp-val">📅 <strong>${entry.timestamp}</strong></span>
+            <button type="button" class="btn-delete-row mobile-only-delete" onclick="deleteHistoryEntry('${entry.id}')" title="Delete record" aria-label="Delete record">🗑️ Delete</button>
+          </td>
+          <td class="cell-sleep" data-label="Sleep">
+            <span class="metric-cell-val">🛌 ${entry.sleep} <small>hrs</small></span>
+          </td>
+          <td class="cell-water" data-label="Water">
+            <span class="metric-cell-val">💧 ${entry.water} <small>gl</small></span>
+          </td>
+          <td class="cell-steps" data-label="Steps">
+            <span class="metric-cell-val">🚶 ${entry.steps.toLocaleString()}</span>
+          </td>
+          <td class="cell-bmi" data-label="BMI">
+            <span class="metric-cell-val">⚖️ <strong>${entry.bmi}</strong></span>
+          </td>
+          <td class="cell-protocol" data-label="Fasting Protocol">
+            <span class="bmi-badge bmi-normal">${entry.fastingProtocol}</span>
+          </td>
+          <td class="cell-action desktop-only-action" data-label="Action" style="text-align: right;">
+            <button type="button" class="btn-delete-row" onclick="deleteHistoryEntry('${entry.id}')">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    window.deleteHistoryEntry = function(entryId) {
+      if (confirm('Delete this entry from your history?')) {
+        appState.habits = appState.habits.filter(h => h.id !== entryId);
+        saveStorage(STORAGE_KEYS.HABITS, appState.habits);
+        renderSummaryView();
+      }
+    };
+
+    document.getElementById('btnClearHistory').addEventListener('click', () => {
+      if (!appState.habits.length) {
+        alert('History log is already empty.');
+        return;
+      }
+      if (confirm('Are you sure you want to permanently clear your habits history?')) {
+        appState.habits = [];
+        saveStorage(STORAGE_KEYS.HABITS, appState.habits);
+        renderSummaryView();
+      }
+    });
+
+    document.getElementById('btnExportCsv').addEventListener('click', () => {
+      if (!appState.habits.length) {
+        alert('No habit records to export. Log an entry first!');
+        return;
+      }
+
+      const headers = ['ID', 'Timestamp', 'Sleep (hours)', 'Water (glasses)', 'Steps', 'Fasting Protocol', 'BMI'];
+      const rows = appState.habits.map(h => [
+        `"${h.id}"`,
+        `"${h.timestamp}"`,
+        h.sleep,
+        h.water,
+        h.steps,
+        `"${h.fastingProtocol}"`,
+        h.bmi
+      ]);
+
+      const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\r\n');
+      downloadFile(csvContent, `amerix_health_history_${Date.now()}.csv`, 'text/csv;charset=utf-8;');
+    });
+
+    document.getElementById('btnExportJson').addEventListener('click', () => {
+      if (!appState.habits.length) {
+        alert('No habit records to export. Log an entry first!');
+        return;
+      }
+
+      const payload = {
+        user: appState.activeUser ? appState.activeUser.username : 'Anonymous',
+        healthBaseline: appState.healthData,
+        history: appState.habits,
+        exportedAt: new Date().toISOString()
+      };
+
+      downloadFile(JSON.stringify(payload, null, 2), `amerix_health_data_${Date.now()}.json`, 'application/json');
+    });
+
+    function downloadFile(content, fileName, mimeType) {
+      const blob = new Blob([content], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    document.getElementById('btnSeeAdvice').addEventListener('click', () => {
+      showStep(5);
+    });
+
+    // --- ADVICE VIEW (VIEW 5) ---
+    function renderAdviceView() {
+      const name = appState.activeUser ? appState.activeUser.username : 'Friend';
+      document.getElementById('adviceHeaderTitle').textContent = `Amerix's Direct Advice for ${name}`;
+
+      const container = document.getElementById('adviceContainer');
+      const latestHabit = appState.habits.length > 0 ? appState.habits[appState.habits.length - 1] : null;
+      const health = appState.healthData || null;
+
+      if (!latestHabit && !health) {
+        container.innerHTML = `
+          <div class="advice-card">
+            <h3>📝 No Data Recorded Yet</h3>
+            <p>Go to Dashboard and habits, enter your vitals and record your day. Amerix will assess your biological metrics and prescribe actionable guidance.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const cards = [];
+
+      // 1. BMI Advice
+      const bmi = health ? health.bmi : (latestHabit && typeof latestHabit.bmi === 'number' ? latestHabit.bmi : null);
+      if (bmi) {
+        if (bmi >= 30) {
+          cards.push({
+            title: '⚠️ Severe Metabolic Excess (BMI ' + bmi + ')',
+            content: `Your BMI is in the obese zone. This is a direct threat to your cardiovascular integrity, joints, and hormone profile. Stop grazing immediately. Eliminate all seed oils, soft drinks, bread, and processed carbohydrates. Adopt OMAD (24 hours) or Extended fasts. Unfat yourself—your vitality depends on it.`
+          });
+        } else if (bmi >= 25) {
+          cards.push({
+            title: '⚖️ Excess Visceral Weight (BMI ' + bmi + ')',
+            content: `Your BMI reveals excess adipose tissue. Visceral fat drives chronic systemic inflammation and blunts androgen receptivity. Eliminate liquid calories, enforce a strict 2MAD or OMAD protocol, and walk 10,000 steps minimum before your feeding window.`
+          });
+        } else if (bmi < 18.5) {
+          cards.push({
+            title: '🥩 Underweight Alert (BMI ' + bmi + ')',
+            content: `Your BMI is below the healthy biological frame. You lack sufficient muscle density and reserves. Do not perform extended fasts. Prioritize pasture-raised eggs, bone broth, red meat, and healthy animal fats. Start progressive heavy compound lifting 3 times per week.`
+          });
+        } else {
+          cards.push({
+            title: '✅ Solid Metabolic Baseline (BMI ' + bmi + ')',
+            content: `Your BMI is within the healthy human range. Guard this foundation. Focus now on progressive overload in the gym, maintaining low visceral fat, and dialing in micronutrient density.`
+          });
+        }
+      }
+
+      // 2. Sleep Advice
+      if (latestHabit) {
+        const sleep = latestHabit.sleep;
+        if (sleep < 7) {
+          cards.push({
+            title: '🌙 Sleep Deficit (' + sleep + ' hours)',
+            content: `Sleeping under 7 hours elevates cortisol and blunts insulin sensitivity the next day. Set a hard digital curfew: screens off by 8:30 PM, dim household lighting, and sleep by 9:30 PM. Recovery is non-negotiable.`
+          });
+        } else if (sleep <= 9) {
+          cards.push({
+            title: '🛌 Optimal Sleep Window (' + sleep + ' hours)',
+            content: `Great sleep duration. Protect this 7–9 hour restorative window. Keep consistent bed and wake times every single day to anchor your circadian rhythm.`
+          });
+        } else {
+          cards.push({
+            title: '⏰ Oversleeping / Sluggishness (' + sleep + ' hours)',
+            content: `You logged over 9 hours of sleep. If you wake up groggy, check your electrolyte balance, reduce late-night carbohydrates, and get immediate morning sunlight exposure.`
+          });
+        }
+
+        // 3. Water Intake
+        const water = latestHabit.water;
+        if (water < 8) {
+          cards.push({
+            title: '💧 Dehydration Alert (' + water + ' glasses)',
+            content: `You drank only ${water} glasses of water. Dehydration places strain on kidney filtration and slows metabolic fat breakdown. Increase to 8–10 glasses daily. Add a pinch of unrefined sea salt or Himalayan rock salt.`
+          });
+        } else {
+          cards.push({
+            title: '💧 Hydration Target Met (' + water + ' glasses)',
+            content: `Strong hydration habit (${water} glasses). Continue spacing your water throughout the day. When fasting, saline water prevents headaches and electrolyte depletion.`
+          });
+        }
+
+        // 4. Movement (Steps)
+        const steps = latestHabit.steps;
+        if (steps < 8000) {
+          cards.push({
+            title: '🚶‍♂️ Sedentary Warning (' + steps.toLocaleString() + ' steps)',
+            content: `Your step count is below 8,000. Prolonged sitting stagnates circulation and blunts insulin sensitivity. Take brisk 15-minute walks during breaks. Reach 10,000 steps daily.`
+          });
+        } else {
+          cards.push({
+            title: '🔥 High Physical Output (' + steps.toLocaleString() + ' steps)',
+            content: `Excellent movement discipline (${steps.toLocaleString()} steps). Daily walking depletes glycogen, enhances mitochondrial density, and optimizes fat oxidation without stressing your nervous system.`
+          });
+        }
+
+        // 5. Fasting Protocol Guidance
+        const protocol = latestHabit.fastingProtocol;
+        if (protocol === 'OMAD (24 hours)') {
+          cards.push({
+            title: '⏳ Fasting Mastery: OMAD (24 hours)',
+            content: `You are running OMAD (24 hours). Eat your single feast inside a 1-hour window. Pack your meal with animal protein, nutrient-dense fats (avocado, tallow, butter), and bone broth. Never break OMAD with seed oils or processed sweets.`
+          });
+        } else if (protocol === '2MAD (20:4, 18:6 or 14:8)') {
+          cards.push({
+            title: '⏳ Fasting Protocol: 2MAD (20:4, 18:6 or 14:8)',
+            content: `2MAD is great for sustained strength and athletic energy. Keep your feeding window clean (e.g. 20:4 or 18:6). Strictly avoid snacking between the two meals.`
+          });
+        } else if (protocol === 'Autophagy Marathon (48 Hours)') {
+          cards.push({
+            title: '⚡ Autophagy Marathon (48 Hours)',
+            content: `You are running a 48-Hour Autophagy Marathon. Your cells are in deep autophagy, recycling damaged proteins and senescent cells. Sip saline water regularly. If dizzy, take a grain of rock salt under your tongue. Break gently with bone broth.`
+          });
+        } else if (protocol === 'Extended (72 Hours)') {
+          cards.push({
+            title: '🧬 Extended Fast (72 Hours)',
+            content: `72 hours triggers deep immune system rejuvenation and stem cell regeneration. Maintain electrolytes strictly with saline water. Do not rush your refeed—sip warm bone broth first, wait 2 hours, then eat light protein.`
+          });
+        } else {
+          cards.push({
+            title: '❌ Not Fasting',
+            content: `You are not currently fasting. Constant grazing keeps insulin elevated 24/7, blocking lipolysis and denying your cells the rejuvenative benefits of autophagy. Start tomorrow with at least a 14:8 or 18:6 protocol.`
+          });
+        }
+      }
+
+      container.innerHTML = cards.map(c => `
+        <div class="advice-card">
+          <h3>${c.title}</h3>
+          <p>${c.content}</p>
+        </div>
+      `).join('');
+    }
+
+    // --- INDEPENDENT FASTING TIMER & CUSTOM DROPDOWN ENGINE ---
+    let fastingInterval = null;
+
+    // Helper: precise message generator depending on whether goal was met + protocol
+    function getFastingCompletionAssessment(protocolName, targetHours, elapsedSeconds) {
+      const targetSeconds = targetHours * 3600;
+      const isGoalMet = elapsedSeconds >= targetSeconds;
+      const elapsedFormatted = formatTime(elapsedSeconds);
+      const targetFormatted = `${targetHours}h 00m`;
+      const pctAchieved = Math.round((elapsedSeconds / targetSeconds) * 100);
+
+      let advice = '';
+
+      if (protocolName.includes('OMAD')) {
+        if (isGoalMet) {
+          advice = `🎯 OMAD GOAL CONQUERED! You completed ${elapsedFormatted} (target: ${targetFormatted}). Your insulin has flatlined for hours and glycogen stores are drained. Refeeding Protocol: Open a strict 1-hour eating window with pasture-raised eggs, bone broth, and grass-fed fatty meat. Absolutely zero seed oils, sugar, or wheat. You conquered the day.`;
+        } else {
+          const diff = formatTime(targetSeconds - elapsedSeconds);
+          advice = `⏳ OMAD INCOMPLETE: You completed ${elapsedFormatted} out of ${targetFormatted} (fell short by ${diff}). While you initiated mild ketosis, you did not reach full 24-hour fat oxidation and deep glycogen depletion. Review what broke you: was it mental weakness, thirst, or lack of salt? Rehydrate with mineral salt, keep your refeed strictly animal-based, and conquer OMAD tomorrow.`;
+        }
+      } else if (protocolName.includes('2MAD')) {
+        if (isGoalMet) {
+          advice = `🎯 2MAD TARGET ACHIEVED! You completed ${elapsedFormatted} (target: ${targetFormatted}). Your digestive tract has had complete rest and systemic inflammation is down. Refeeding Protocol: Break fast with solid protein and healthy animal fat (e.g. steak & butter or boiled eggs). Structure your second meal 4 to 6 hours later. Do NOT graze continuously inside your eating window.`;
+        } else {
+          const diff = formatTime(targetSeconds - elapsedSeconds);
+          advice = `⏳ 2MAD STOPPED EARLY: You completed ${elapsedFormatted} out of ${targetFormatted} (fell short by ${diff}). Hunger in an intermittent window is merely ghrelin spikes testing your mental frame. Next time, take a pinch of rock salt and drink warm water. Do not compensate by bingeing—eat your planned protein meal and reset.`;
+        }
+      } else if (protocolName.includes('Autophagy Marathon')) {
+        if (isGoalMet) {
+          advice = `🔥 48-HOUR AUTOPHAGY MARATHON CONQUERED! You completed ${elapsedFormatted} (target: ${targetFormatted}). Elite biological discipline! Your body has executed deep autophagy, clearing out senescent cells, damaged mitochondria, and dysfunctional proteins. Crucial Refeeding Rule: Break gently with 1 cup of warm bone broth and pink Himalayan salt. Wait 60 to 90 minutes before eating small portions of lean meat or eggs. Do NOT shock your gut with heavy solids or fiber.`;
+        } else {
+          const diff = formatTime(targetSeconds - elapsedSeconds);
+          advice = `⏳ AUTOPHAGY MARATHON CUT SHORT: You completed ${elapsedFormatted} out of ${targetFormatted} (fell short by ${diff}). 48 hours requires supreme metabolic adaptability. Reaching ${elapsedFormatted} still triggered initial cellular cleanup and strong lipolysis. Analyze the bottleneck: electrolyte deficit or psychological craving? Sip bone broth, replenish sodium/potassium, and prepare for your next attempt.`;
+        }
+      } else if (protocolName.includes('Extended')) {
+        if (isGoalMet) {
+          advice = `⚡ 72-HOUR EXTENDED FAST MASTERED! You completed ${elapsedFormatted} (target: ${targetFormatted}). Supreme human resilience. You have stimulated hematopoietic stem cell renewal, purged old white blood cells, and transformed your metabolic flexibility. Critical Refeeding Protocol: Sip warm clear bone broth with sea salt slowly. Wait 2 hours. Have two soft-boiled eggs. Avoid all carbohydrates, dairy, and large steaks for the first 12 hours to prevent refeeding syndrome.`;
+        } else {
+          const diff = formatTime(targetSeconds - elapsedSeconds);
+          advice = `⏳ 72-HOUR EXTENDED FAST STOPPED: You completed ${elapsedFormatted} out of ${targetFormatted} (fell short by ${diff}). Extended fasting past 48 hours is physically rigorous. Any fast lasting ${elapsedFormatted} has generated profound autophagy and visceral fat burning. Rehydrate with mineral saline water, break gently with warm broth, and take pride in the ground you conquered.`;
+        }
+      } else {
+        if (isGoalMet) {
+          advice = `🎯 FAST GOAL CONQUERED! You completed ${elapsedFormatted} (target: ${targetFormatted}). Insulin is baseline and ketones are elevated. Break your fast gently with whole proteins and saline water.`;
+        } else {
+          advice = `⏳ FAST ENDED EARLY: You completed ${elapsedFormatted} out of ${targetFormatted}. Rehydrate with mineral water, assess what triggered the break, and stay disciplined.`;
+        }
+      }
+
+      return {
+        isGoalMet,
+        elapsedFormatted,
+        targetFormatted,
+        pctAchieved,
+        advice
+      };
+    }
+
+    function initFastingTimer() {
+      const dropdownBtn = document.getElementById('dropdownTriggerBtn');
+      const dropdownList = document.getElementById('customDropdownList');
+      const selectedIcon = document.getElementById('selectedProtoIcon');
+      const selectedTitle = document.getElementById('selectedProtoTitle');
+      const dropdownItems = document.querySelectorAll('.dropdown-opt-item');
+
+      const startBtn = document.getElementById('btnStartFast');
+      const finishBtn = document.getElementById('btnFinishFast');
+      const resultCard = document.getElementById('fastCompletionCard');
+      const dismissBtn = document.getElementById('btnDismissResult');
+
+      // Sync custom dropdown with saved state
+      const currentTarget = appState.fastingTimer.targetHours || 24;
+      const currentProto = appState.fastingTimer.protocolName || 'OMAD (24 hours)';
+      const currentIcon = appState.fastingTimer.protocolIcon || '🔥';
+
+      selectedTitle.textContent = currentProto;
+      selectedIcon.textContent = currentIcon;
+
+      dropdownItems.forEach(item => {
+        if (Number(item.dataset.hours) === currentTarget) {
+          item.classList.add('selected');
+        } else {
+          item.classList.remove('selected');
+        }
+      });
+
+      // Toggle dropdown open/close when idle
+      dropdownBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (appState.fastingTimer.isRunning) return;
+        const isOpen = dropdownList.classList.contains('show');
+        if (isOpen) {
+          dropdownList.classList.remove('show');
+          dropdownBtn.classList.remove('open');
+        } else {
+          dropdownList.classList.add('show');
+          dropdownBtn.classList.add('open');
+        }
+      });
+
+      // Close dropdown on click outside
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('#customDropdownContainer')) {
+          dropdownList.classList.remove('show');
+          dropdownBtn.classList.remove('open');
+        }
+      });
+
+      // Handle item selection with proper hover feedback
+      dropdownItems.forEach(item => {
+        item.addEventListener('click', () => {
+          if (appState.fastingTimer.isRunning) return;
+
+          dropdownItems.forEach(i => i.classList.remove('selected'));
+          item.classList.add('selected');
+
+          const chosenHours = Number(item.dataset.hours);
+          const chosenName = item.dataset.name;
+          const chosenIcon = item.dataset.icon;
+
+          selectedTitle.textContent = chosenName;
+          selectedIcon.textContent = chosenIcon;
+
+          appState.fastingTimer.targetHours = chosenHours;
+          appState.fastingTimer.protocolName = chosenName;
+          appState.fastingTimer.protocolIcon = chosenIcon;
+
+          saveStorage(STORAGE_KEYS.FASTING_TIMER, appState.fastingTimer);
+
+          dropdownList.classList.remove('show');
+          dropdownBtn.classList.remove('open');
+          updateTimerDisplay();
+        });
+      });
+
+      // START Button: Starts the fast. Locked while running.
+      startBtn.addEventListener('click', () => {
+        if (appState.fastingTimer.isRunning) {
+          alert('A fast is already running! You cannot start over until you click FINISH.');
+          return;
+        }
+
+        appState.fastingTimer.isRunning = true;
+        appState.fastingTimer.startTime = Date.now();
+        delete appState.fastingTimer.finishedDuration;
+
+        // Hide any previous completion card
+        resultCard.style.display = 'none';
+
+        saveStorage(STORAGE_KEYS.FASTING_TIMER, appState.fastingTimer);
+        startTimerLoop();
+      });
+
+      // FINISH Button: Concludes fast, assesses goal completion, shows tailored feedback
+      finishBtn.addEventListener('click', () => {
+        if (!appState.fastingTimer.isRunning) {
+          alert('No fast currently running. Select a protocol and click START.');
+          return;
+        }
+
+        const elapsedSecs = Math.floor((Date.now() - appState.fastingTimer.startTime) / 1000);
+        appState.fastingTimer.isRunning = false;
+        appState.fastingTimer.finishedDuration = elapsedSecs;
+        appState.fastingTimer.startTime = null;
+
+        saveStorage(STORAGE_KEYS.FASTING_TIMER, appState.fastingTimer);
+        clearInterval(fastingInterval);
+        fastingInterval = null;
+
+        const assessment = getFastingCompletionAssessment(
+          appState.fastingTimer.protocolName || 'OMAD (24 hours)',
+          appState.fastingTimer.targetHours || 24,
+          elapsedSecs
+        );
+
+        // Display the detailed result card
+        showFastingCompletionCard(assessment);
+
+        updateTimerDisplay();
+      });
+
+      dismissBtn.addEventListener('click', () => {
+        resultCard.style.display = 'none';
+      });
+
+      // Resume timer if page reloaded during active fast
+      if (appState.fastingTimer.isRunning && appState.fastingTimer.startTime) {
+        startTimerLoop();
+      } else {
+        updateTimerDisplay();
+      }
+    }
+
+    function showFastingCompletionCard(assessment) {
+      const card = document.getElementById('fastCompletionCard');
+      const title = document.getElementById('completionCardTitle');
+      const badge = document.getElementById('completionStatusBadge');
+      const resProto = document.getElementById('resProtocolName');
+      const resTarget = document.getElementById('resTargetDuration');
+      const resActual = document.getElementById('resActualDuration');
+      const resPct = document.getElementById('resPctAchieved');
+      const resAdvice = document.getElementById('resAdviceText');
+
+      resProto.textContent = appState.fastingTimer.protocolName || 'OMAD (24 hours)';
+      resTarget.textContent = assessment.targetFormatted;
+      resActual.textContent = assessment.elapsedFormatted;
+      resPct.textContent = `${assessment.pctAchieved}%`;
+      resAdvice.textContent = assessment.advice;
+
+      if (assessment.isGoalMet) {
+        card.className = 'fast-completion-card goal-met';
+        title.textContent = '🎉 Fast Goal Achieved!';
+        badge.className = 'completion-status-badge badge-met';
+        badge.textContent = 'Goal Conquered';
+      } else {
+        card.className = 'fast-completion-card goal-missed';
+        title.textContent = '⚠️ Fast Ended Short of Goal';
+        badge.className = 'completion-status-badge badge-missed';
+        badge.textContent = 'Goal Incomplete';
+      }
+
+      card.style.display = 'block';
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function startTimerLoop() {
+      if (fastingInterval) clearInterval(fastingInterval);
+      updateTimerDisplay();
+      fastingInterval = setInterval(updateTimerDisplay, 1000);
+    }
+
+    function formatTime(totalSeconds) {
+      const hrs = Math.floor(totalSeconds / 3600);
+      const mins = Math.floor((totalSeconds % 3600) / 60);
+      const secs = totalSeconds % 60;
+      return `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+
+    function updateTimerDisplay() {
+      const displayEl = document.getElementById('fastingTimerDisplay');
+      const statusLabel = document.getElementById('fastingStatusLabel');
+      const progressBar = document.getElementById('fastingProgressBar');
+      const startBtn = document.getElementById('btnStartFast');
+      const finishBtn = document.getElementById('btnFinishFast');
+      const dropdownBtn = document.getElementById('dropdownTriggerBtn');
+
+      const targetHours = appState.fastingTimer.targetHours || 24;
+      const targetSeconds = targetHours * 3600;
+
+      let elapsedSeconds = 0;
+
+      if (appState.fastingTimer.isRunning && appState.fastingTimer.startTime) {
+        // Fast is actively running
+        elapsedSeconds = Math.floor((Date.now() - appState.fastingTimer.startTime) / 1000);
+        displayEl.textContent = formatTime(elapsedSeconds);
+
+        const pct = Math.min(Math.round((elapsedSeconds / targetSeconds) * 100), 100);
+        progressBar.style.width = pct + '%';
+
+        // Cannot start over or change protocol mid-fast
+        startBtn.disabled = true;
+        finishBtn.disabled = false;
+        dropdownBtn.disabled = true;
+        dropdownBtn.title = 'Protocol locked while fast is running';
+
+        if (elapsedSeconds >= targetSeconds) {
+          statusLabel.textContent = `🎯 Fast goal reached (${targetHours}h)! In deep autophagy. Click FINISH when ready to refeed.`;
+          progressBar.style.background = 'linear-gradient(90deg, #f59e0b, #10b981)';
+        } else {
+          const remainingSecs = Math.max(targetSeconds - elapsedSeconds, 0);
+          statusLabel.textContent = `🔥 Fast in progress (${pct}%). Target: ${targetHours}h. Remaining: ${formatTime(remainingSecs)}. Stay hydrated.`;
+          progressBar.style.background = 'linear-gradient(90deg, #2ee585, #0ea558)';
+        }
+      } else {
+        // Fast is NOT running
+        startBtn.disabled = false;
+        finishBtn.disabled = true;
+        dropdownBtn.disabled = false;
+        dropdownBtn.title = 'Choose fasting protocol';
+
+        if (appState.fastingTimer.finishedDuration) {
+          elapsedSeconds = appState.fastingTimer.finishedDuration;
+          displayEl.textContent = formatTime(elapsedSeconds);
+          progressBar.style.width = '100%';
+          progressBar.style.background = 'linear-gradient(90deg, #10b981, #059669)';
+          statusLabel.textContent = `Last fast completed at ${formatTime(elapsedSeconds)}. Ready for your next fast? Choose protocol and click START.`;
+        } else {
+          displayEl.textContent = '00:00:00';
+          progressBar.style.width = '0%';
+          statusLabel.textContent = `Ready. Choose your fasting protocol and click START when your fast begins.`;
+        }
+      }
+    }
+
+    // --- INITIALIZATION ---
+    window.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      updateAuthHeaderUI();
+      initFastingTimer();
+
+      if (appState.activeUser) {
+        showStep(3); // Logged in -> Dashboard and habits
+      } else {
+        showStep(1); // Default to Welcome
+      }
+    });
+  </script>
+</body>
+</html>
