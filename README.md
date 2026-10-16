@@ -1,6 +1,6 @@
 # Amerix Health Advisor
 
-Amerix Health Advisor is a single-page web application designed for metabolic optimization, intermittent fasting management, biological marker monitoring, and health tracking. Built using pure HTML, CSS, and JavaScript, the application operates entirely client-side, storing state across browser sessions via `localStorage`.
+Amerix Health Advisor is a single-page web application designed for metabolic optimization, intermittent fasting management, biological marker monitoring, and health tracking. Built using pure HTML[...] 
 
 ---
 
@@ -80,6 +80,15 @@ The **Breakdown Engine** processes baseline measurements and daily habits to pro
 | Application state | Active view, user profile, baseline data, habits, and timers | JavaScript ES6+ |
 | Data storage | Accounts, sessions, logs, fasting state, and theme preference | `window.localStorage` |
 | Calculations engine | BMI values, progress percentages, and fasting statistics | Native JavaScript functions |
+
+## Technologies Used (Architecture)
+
+- **HTML5:** Semantic, accessible markup used for all views and components in the single-page layout.
+- **CSS3:** Responsive layout (grid & flexbox), CSS custom properties for theming, transitions, and animations.
+- **JavaScript (ES6+):** Core application logic, routing between views, timer mechanics, form validation, and export utilities.
+- **Web Storage API (localStorage):** Persists user account simulation, daily logs, timer and theme preferences across sessions.
+- **Client-side Export (CSV/JSON):** Implemented with JavaScript for downloading history and logs without a backend.
+- **No build tools or frameworks:** The project is intentionally framework-free and runs in plain browser environments.
 
 ## Potential Future Improvements
 
