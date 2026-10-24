@@ -1,6 +1,6 @@
 # Amerix Health Advisor
 
-Amerix Health Advisor is a single-page web application designed for metabolic optimization, intermittent fasting management, biological marker monitoring, and health tracking. Built using pure HTML[...] 
+Amerix Health Advisor is a single-page web application designed for metabolic optimization, intermittent fasting management, biological marker monitoring, and health tracking. Built using pure HTML, CSS and JavaScript.
 
 ---
 
