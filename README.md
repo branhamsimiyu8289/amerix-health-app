@@ -23,6 +23,18 @@ Amerix Health Advisor is a single-page web application designed for metabolic op
 - **JavaScript (ES6+):** DOM manipulation, state management, event handling, calculations, timer logic, and data processing.
 - **Web Storage API (`localStorage`):** Client-side persistence for user authentication, daily logs, timer state, and theme preferences.
 
+## Project Files
+
+- `AmerixHealthApp.html` contains the page structure.
+- `AmerixHealthApp.css` contains the layout, responsive styles, and light/dark themes.
+- `AmerixHealthApp.js` contains the application behavior, state management, and calculations.
+
+Keep the three files in the same directory so the HTML page can load its stylesheet and script.
+
+## Run the App
+
+Open `AmerixHealthApp.html` in a modern web browser. No build step or external dependencies are required. The application stores its data in the browser's `localStorage`.
+
 ---
 
 ## Learning Focus
