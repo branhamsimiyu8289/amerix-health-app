@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amerix Health Advisor</title>
+  <link rel="stylesheet" href="AmerixHealthApp.css">
+</head>
+<body>
+
+  <!-- COMPACT HEADER WITH BRAND & THE 4-TAB NAVIGATION (VISIBLE ONLY AFTER LOGIN) -->
+  <header>
+    <div class="header-container">
+      <div class="brand-block">
+        <p class="eyebrow">Personal Health Companion</p>
+        <h1>Amerix Health Advisor</h1>
+        <p class="subtitle">Metabolic discipline, intermittent fasting, and biological tracking.</p>
+      </div>
+
+      <div class="header-user-nav-block">
+        <!-- User Status, Theme Toggle & Navigation Row -->
+        <div class="user-row">
+          <button type="button" id="themeToggleBtn" class="theme-toggle-btn" aria-label="Toggle Light / Dark Mode" title="Switch between Light and Dark mode">
+            <span id="themeToggleIcon">🌙</span>
+            <span id="themeToggleText">Dark</span>
+          </button>
+          <div id="userBadge" class="user-badge" style="display: none;">
+            <span>👤 <strong id="headerUsername">Guest</strong></span>
+            <button type="button" id="btnSignOut">Sign out</button>
+          </div>
+          <div id="guestBadge" class="user-badge">
+            <span>👤 <em>Not signed in</em></span>
+            <button type="button" onclick="showAuthView('signin')">Log in</button>
+          </div>
+        </div>
+
+        <!-- THE 4 MENU ITEMS: VISIBLE ONLY AFTER LOGIN OR SIGN UP -->
+        <nav class="nav-bar-four" id="mainNavBar" aria-label="Main Navigation">
+          <button type="button" class="nav-tab active" id="navTabWelcome" onclick="showStep(1)">Welcome</button>
+          <button type="button" class="nav-tab" id="navTabDashboard" onclick="handleStepNav(3)">Dashboard and habits</button>
+          <button type="button" class="nav-tab" id="navTabFasting" onclick="handleStepNav('fasting')">Fasting and principles</button>
+          <button type="button" class="nav-tab" id="navTabSummary" onclick="handleStepNav(4)">Summary</button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 1: WELCOME & COMPACT "WHAT WE WILL HELP YOU TRACK" (FITS LAPTOP)      -->
+    <!-- ========================================================================= -->
+    <div id="view-step-1" class="view-step active">
+      <div class="landing-grid">
+        <!-- Section 1: Welcome & Choices -->
+        <section class="panel" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <h2>Welcome to Amerix Health Advisor</h2>
+            <p class="desc">Take control of your biological markers, hormones, and longevity with structured fasting, hydration, and daily habit tracking.</p>
+            <p style="font-size: 0.88rem; margin-bottom: 10px; font-weight: 600;">Choose an option below to access your dashboard:</p>
+          </div>
+          <div class="actions">
+            <button type="button" id="btnChooseSignIn" class="primary-large" style="flex: 1;">Log In</button>
+            <button type="button" id="btnChooseSignUp" class="button-link secondary primary-large" style="flex: 1;">Create Account</button>
+          </div>
+        </section>
+
+        <!-- Section 2: Compact "What We Will Help You Track" (Reduced for Laptop Viewport) -->
+        <section class="panel">
+          <h2>What We Will Help You Track</h2>
+          <p class="desc" style="margin-bottom: 8px;">A focused, biological approach to metabolic optimization:</p>
+          <ul class="compact-track-list">
+            <li class="compact-track-item">
+              <span class="compact-track-icon">⚖️</span>
+              <div><strong>Body Mass Index:</strong> <span>Target healthy weight and track unfatting progress.</span></div>
+            </li>
+            <li class="compact-track-item">
+              <span class="compact-track-icon">⏳</span>
+              <div><strong>Fasting Protocols:</strong> <span>Live timer for OMAD, 2MAD & autophagy marathons.</span></div>
+            </li>
+            <li class="compact-track-item">
+              <span class="compact-track-icon">💧</span>
+              <div><strong>Saline Hydration:</strong> <span>8–10 glasses daily with mineral electrolyte balance.</span></div>
+            </li>
+            <li class="compact-track-item">
+              <span class="compact-track-icon">🚶‍♂️</span>
+              <div><strong>Daily Movement:</strong> <span>Hit 10,000 steps daily to burn glycogen and lower cortisol.</span></div>
+            </li>
+            <li class="compact-track-item">
+              <span class="compact-track-icon">🌙</span>
+              <div><strong>Sleep Rhythm:</strong> <span>7–9 hours restorative sleep to optimize growth hormone.</span></div>
+            </li>
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 2: AUTHENTICATION (LOG IN OR SIGN UP DEPENDING ON PREVIOUS CHOICE)   -->
+    <!-- ========================================================================= -->
+    <div id="view-step-2" class="view-step">
+      <div style="max-width: 480px; margin: 0 auto;">
+
+        <!-- Sign In Card -->
+        <section class="panel" id="authSignInCard">
+          <h2>Welcome Back</h2>
+          <p class="desc">Sign in with your username to access your health dashboard and logs.</p>
+          <div id="signInToast" class="toast-msg"></div>
+          <form id="signInForm">
+            <label for="loginUsername">Username
+              <input type="text" id="loginUsername" name="loginUsername" placeholder="e.g. JohnDoe" required>
+            </label>
+            <label for="loginPassword">Password
+              <input type="password" id="loginPassword" name="loginPassword" placeholder="••••••••" required>
+            </label>
+            <div class="actions">
+              <button type="submit" style="width: 100%;">Sign In</button>
+            </div>
+            <p class="switch-link">
+              Don't have an account? <a id="linkSwitchToSignUp">Create one now</a>
+            </p>
+            <p class="switch-link" style="margin-top: 4px;">
+              <a onclick="showStep(1)" style="color: var(--muted); text-decoration: none;">← Back to Welcome</a>
+            </p>
+          </form>
+        </section>
+
+        <!-- Sign Up Card -->
+        <section class="panel" id="authSignUpCard" style="display: none;">
+          <h2>Create Your Account</h2>
+          <p class="desc">Set up your profile to start logging habits and receiving tailored advice.</p>
+          <div id="signUpToast" class="toast-msg"></div>
+          <form id="signUpForm">
+            <label for="regEmail">Email
+              <input type="email" id="regEmail" name="regEmail" placeholder="you@example.com" required>
+            </label>
+            <label for="regUsername">Create Username
+              <input type="text" id="regUsername" name="regUsername" placeholder="Choose a username" required>
+            </label>
+            <label for="regPassword">Create Password
+              <input type="password" id="regPassword" name="regPassword" placeholder="At least 4 characters" required>
+            </label>
+            <div class="actions">
+              <button type="submit" style="width: 100%;">Create Account</button>
+            </div>
+            <p class="switch-link">
+              Already have an account? <a id="linkSwitchToSignIn">Sign In</a>
+            </p>
+            <p class="switch-link" style="margin-top: 4px;">
+              <a onclick="showStep(1)" style="color: var(--muted); text-decoration: none;">← Back to Welcome</a>
+            </p>
+          </form>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 3: DASHBOARD & HEALTH HABITS LOG ONLY (NO RADIOS MARKED BY DEFAULT)   -->
+    <!-- ========================================================================= -->
+    <div id="view-step-3" class="view-step">
+      <form id="combinedTrackingForm">
+
+        <!-- Baseline Health Data -->
+        <section class="panel">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <div>
+              <h2>Dashboard & Baseline Health</h2>
+              <p class="desc">Welcome, <strong id="dashboardGreetingUser">User</strong>. Add your baseline vitals to compute your metabolic baseline.</p>
+            </div>
+            <div id="liveBmiTag" class="bmi-badge bmi-normal" style="font-size: 0.85rem; padding: 4px 10px; display: none;">
+              BMI: <span id="liveBmiVal">--</span>
+            </div>
+          </div>
+
+          <div class="field-grid three">
+            <label for="weightInput">Weight (kg)
+              <span class="hint">e.g. 78.5</span>
+              <input type="number" id="weightInput" min="20" max="350" step="0.1" required>
+            </label>
+            <label for="heightInput">Height (cm)
+              <span class="hint">e.g. 178</span>
+              <input type="number" id="heightInput" min="80" max="260" step="0.1" required>
+            </label>
+            <label for="ageInput">Age (years)
+              <span class="hint">e.g. 32</span>
+              <input type="number" id="ageInput" min="12" max="120" required>
+            </label>
+          </div>
+        </section>
+
+        <!-- Healthy Habits Log with Unchecked Radios by Default -->
+        <section class="panel">
+          <h2>Healthy Habits Log</h2>
+          <p class="desc">Record the habits that shape your day. Submitting will update your vitals and load Your Summary.</p>
+
+          <div class="field-grid">
+            <label for="sleepInput">Sleep (hours)
+              <span class="hint">Optimal: 7 – 9 hours</span>
+              <input id="sleepInput" type="number" min="0" max="24" step="0.1" required>
+            </label>
+            <label for="waterInput">Water Intake (glasses)
+              <span class="hint">1 glass ~ 250ml. Target: 8 – 12</span>
+              <input id="waterInput" type="number" min="0" max="40" required>
+            </label>
+            <label for="stepsInput">Daily Steps
+              <span class="hint">Amerix target: 8,000 – 10,000+</span>
+              <input id="stepsInput" type="number" min="0" max="100000" step="100" required>
+            </label>
+
+            <!-- Exactly the 5 requested protocols, none marked by default -->
+            <fieldset>
+              <legend>Fasting Protocol</legend>
+              <div class="radio-options">
+                <label><input type="radio" value="OMAD (24 hours)" name="fastingProtocol" required> OMAD (24 hours)</label>
+                <label><input type="radio" value="2MAD (20:4, 18:6 or 14:8)" name="fastingProtocol" required> 2MAD (20:4, 18:6 or 14:8)</label>
+                <label><input type="radio" value="Autophagy Marathon (48 Hours)" name="fastingProtocol" required> Autophagy Marathon (48 Hours)</label>
+                <label><input type="radio" value="Extended (72 Hours)" name="fastingProtocol" required> Extended (72 Hours)</label>
+                <label><input type="radio" value="Not fasting" name="fastingProtocol" required> Not fasting</label>
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="actions" style="margin-top: 18px;">
+            <button type="submit" class="primary-large" style="width: 100%;">
+              💾 Submit Entry & View Summary →
+            </button>
+          </div>
+        </section>
+      </form>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW SEPARATE: FASTING TRACKER (CUSTOM DROPDOWN + START & FINISH)         -->
+    <!-- ========================================================================= -->
+    <div id="view-step-fasting" class="view-step">
+
+      <!-- Interactive Fasting Tracker: User chooses protocol and when to START -->
+      <section class="fasting-timer-box">
+        <div class="fasting-header">
+          <div>
+            <h3>⏱️ Live Intermittent Fasting Tracker</h3>
+            <p style="margin: 2px 0 0; color: #d4ebd7; font-size: 0.84rem;">Select your fasting protocol, click START, and tap FINISH when breaking your fast.</p>
+          </div>
+
+          <!-- CUSTOM STYLED DROPDOWN WITH PROPER HOVERING EFFECTS -->
+          <div class="custom-dropdown-container" id="customDropdownContainer">
+            <button type="button" class="dropdown-trigger-btn" id="dropdownTriggerBtn" aria-haspopup="listbox" aria-expanded="false">
+              <span style="display: flex; align-items: center; gap: 8px;">
+                <span id="selectedProtoIcon">🔥</span>
+                <span id="selectedProtoTitle">OMAD (24 hours)</span>
+              </span>
+              <span class="dropdown-arrow-icon">▼</span>
+            </button>
+
+            <div class="custom-dropdown-list" id="customDropdownList" role="listbox">
+              <div class="dropdown-opt-item selected" data-hours="24" data-name="OMAD (24 hours)" data-icon="🔥" role="option">
+                <div class="opt-info">
+                  <span class="opt-icon">🔥</span>
+                  <div>
+                    <div class="opt-title">OMAD (24 hours)</div>
+                    <div class="opt-desc">One Meal A Day · Flatline insulin & fat oxidation</div>
+                  </div>
+                </div>
+                <span class="opt-badge">24h</span>
+              </div>
+
+              <div class="dropdown-opt-item" data-hours="20" data-name="2MAD (20:4, 18:6 or 14:8)" data-icon="⚡" role="option">
+                <div class="opt-info">
+                  <span class="opt-icon">⚡</span>
+                  <div>
+                    <div class="opt-title">2MAD (20:4, 18:6 or 14:8)</div>
+                    <div class="opt-desc">Two Meals · Athletic strength & clean recovery</div>
+                  </div>
+                </div>
+                <span class="opt-badge">20h</span>
+              </div>
+
+              <div class="dropdown-opt-item" data-hours="48" data-name="Autophagy Marathon (48 Hours)" data-icon="🧬" role="option">
+                <div class="opt-info">
+                  <span class="opt-icon">🧬</span>
+                  <div>
+                    <div class="opt-title">Autophagy Marathon (48 Hours)</div>
+                    <div class="opt-desc">Cellular Renewal · Clears out senescent cells</div>
+                  </div>
+                </div>
+                <span class="opt-badge">48h</span>
+              </div>
+
+              <div class="dropdown-opt-item" data-hours="72" data-name="Extended (72 Hours)" data-icon="🛡️" role="option">
+                <div class="opt-info">
+                  <span class="opt-icon">🛡️</span>
+                  <div>
+                    <div class="opt-title">Extended (72 Hours)</div>
+                    <div class="opt-desc">Immune Reset · Deep stem cell regeneration</div>
+                  </div>
+                </div>
+                <span class="opt-badge">72h</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fasting-timer-display" id="fastingTimerDisplay">00:00:00</div>
+        <div class="fasting-status-label" id="fastingStatusLabel">Choose your fasting protocol and click START to begin.</div>
+
+        <div class="fasting-progress-track">
+          <div class="fasting-progress-bar" id="fastingProgressBar"></div>
+        </div>
+
+        <!-- TWO BUTTONS: "START" AND "FINISH". CANNOT START OVER WHILE RUNNING -->
+        <div class="fasting-controls-two">
+          <button type="button" id="btnStartFast">START</button>
+          <button type="button" id="btnFinishFast" disabled>FINISH</button>
+        </div>
+
+        <!-- FASTING COMPLETION RESULT CARD (DISPLAYS WHETHER GOAL WAS MET & PROTOCOL-SPECIFIC ADVICE) -->
+        <div class="fast-completion-card" id="fastCompletionCard">
+          <div class="completion-header">
+            <h4 style="margin: 0; font-size: 1.1rem; color: var(--deep-green);" id="completionCardTitle">Fast Finished</h4>
+            <span class="completion-status-badge badge-met" id="completionStatusBadge">Goal Achieved</span>
+          </div>
+
+          <div class="completion-metrics-row">
+            <div>Protocol: <strong id="resProtocolName">OMAD (24 hours)</strong></div>
+            <div>Target: <strong id="resTargetDuration">24h 00m</strong></div>
+            <div>Actual Time: <strong id="resActualDuration">00:00:00</strong></div>
+            <div>Achievement: <strong id="resPctAchieved">100%</strong></div>
+          </div>
+
+          <p class="completion-advice-text" id="resAdviceText">
+            <!-- Tailored message will appear here -->
+          </p>
+
+          <div style="text-align: right;">
+            <button type="button" class="secondary" id="btnDismissResult" style="padding: 5px 14px; font-size: 0.8rem; min-height: 34px;">
+              ✓ Got It / Dismiss
+            </button>
+          </div>
+        </div>
+
+        <div class="saline-tip">
+          <span style="font-size: 1.15rem;">🧂</span>
+          <span><strong>Amerix Fasting Rule:</strong> When fasting past 16 hours or feeling lightheaded, drink lukewarm water with a pinch of pure Himalayan rock salt. Never break a fast with refined sugar or greasy junk food.</span>
+        </div>
+      </section>
+
+      <!-- Non-Negotiable Rules in DISPLAY FLEX COLUMN -->
+      <section class="panel">
+        <h2>Amerix's 5 Non-Negotiable Health Principles</h2>
+        <p class="desc">Master these biological fundamentals to eliminate chronic fatigue, optimize hormones, and unfat your body.</p>
+
+        <div class="principles-flex-column">
+          <div class="principle-row-card">
+            <div class="principle-row-icon">🔥</div>
+            <div class="principle-row-content">
+              <h4>1. Fasting & Autophagy</h4>
+              <p>Give your digestive system complete rest. Fasting triggers autophagy—cellular cleanup where your body scavenges and recycles damaged, senescent cells and excess visceral fat.</p>
+            </div>
+          </div>
+
+          <div class="principle-row-card">
+            <div class="principle-row-icon">🚫</div>
+            <div class="principle-row-content">
+              <h4>2. Zero Seed Oils & Sugars</h4>
+              <p>Eliminate canola, vegetable, corn, and sunflower oils. Cook exclusively with grass-fed tallow, butter, or ghee. Refined sugar is a metabolic toxin that destroys liver function.</p>
+            </div>
+          </div>
+
+          <div class="principle-row-card">
+            <div class="principle-row-icon">☀️</div>
+            <div class="principle-row-content">
+              <h4>3. Morning Sun & Early Sleep (9:30 PM)</h4>
+              <p>Expose your eyes and skin to natural morning sunlight within 30 minutes of waking. Be in bed by 9:30 PM in total darkness to maximize nocturnal human growth hormone release.</p>
+            </div>
+          </div>
+
+          <div class="principle-row-card">
+            <div class="principle-row-icon">🏋️</div>
+            <div class="principle-row-content">
+              <h4>4. Heavy Resistance Training & 10,000 Steps</h4>
+              <p>Squat, deadlift, and press heavy weights 3 times a week. Accumulate 10,000 daily steps. Dense skeletal muscle is your premier metabolic sink and longevity shield.</p>
+            </div>
+          </div>
+
+          <div class="principle-row-card">
+            <div class="principle-row-icon">💧</div>
+            <div class="principle-row-content">
+              <h4>5. Saline Hydration & Cold Showers</h4>
+              <p>Plain distilled water flushes electrolytes out of your cells. Add natural rock or sea salt to your water. Take cold showers daily to sharpen dopaminergic resilience and activate metabolism.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 4: COMPACT & MOBILE-RESPONSIVE "YOUR SUMMARY"                        -->
+    <!-- ========================================================================= -->
+    <div id="view-step-4" class="view-step">
+      <section class="panel" style="padding: clamp(14px, 2vw, 20px);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+          <div>
+            <h2 style="font-size: clamp(1.4rem, 2.5vw, 1.9rem); margin: 0 0 2px;">Your Summary</h2>
+            <p class="desc" style="margin: 0; font-size: 0.85rem;">Latest biological markers and recorded habits.</p>
+          </div>
+          <div>
+            <button type="button" class="secondary" onclick="showStep(3)" style="padding: 5px 12px; font-size: 0.82rem; min-height: 36px;">
+              ← Log Another Day
+            </button>
+          </div>
+        </div>
+
+        <!-- Compressed Visual Progress Indicators -->
+        <div class="metrics-summary-grid">
+          <!-- BMI Card -->
+          <div class="metric-card">
+            <div class="metric-label">
+              <span>BMI</span>
+              <span id="summaryBmiBadge" class="bmi-badge bmi-normal">--</span>
+            </div>
+            <div class="metric-value" id="summaryBmiVal">--</div>
+            <div class="metric-progress">
+              <div class="metric-progress-fill" id="summaryBmiFill" style="width: 50%;"></div>
+            </div>
+            <div class="metric-note" id="summaryBmiNote">Normal: 18.5 – 24.9</div>
+          </div>
+
+          <!-- Daily Steps Card -->
+          <div class="metric-card">
+            <div class="metric-label">
+              <span>Steps</span>
+              <span id="summaryStepsPct" style="color: var(--green); font-weight: 800;">0%</span>
+            </div>
+            <div class="metric-value" id="summaryStepsVal">0</div>
+            <div class="metric-progress">
+              <div class="metric-progress-fill" id="summaryStepsFill" style="width: 0%;"></div>
+            </div>
+            <div class="metric-note">Goal: 10,000 steps</div>
+          </div>
+
+          <!-- Water Intake Card -->
+          <div class="metric-card">
+            <div class="metric-label">
+              <span>Water</span>
+              <span id="summaryWaterPct" style="color: var(--green); font-weight: 800;">0%</span>
+            </div>
+            <div class="metric-value" id="summaryWaterVal">0 <span style="font-size: 0.88rem; font-weight: 600;">glasses</span></div>
+            <div class="metric-progress">
+              <div class="metric-progress-fill" id="summaryWaterFill" style="width: 0%;"></div>
+            </div>
+            <div class="metric-note">Target: 8+ glasses</div>
+          </div>
+
+          <!-- Sleep Recovery Card -->
+          <div class="metric-card">
+            <div class="metric-label">
+              <span>Sleep</span>
+              <span id="summarySleepScore" style="color: var(--green); font-weight: 800;">--</span>
+            </div>
+            <div class="metric-value" id="summarySleepVal">0 <span style="font-size: 0.88rem; font-weight: 600;">hrs</span></div>
+            <div class="metric-progress">
+              <div class="metric-progress-fill" id="summarySleepFill" style="width: 0%;"></div>
+            </div>
+            <div class="metric-note">Optimal: 7 – 9 hours</div>
+          </div>
+        </div>
+
+        <!-- Protocol & Timestamp Banner -->
+        <div style="background: var(--light-mint); border: 1px solid var(--line); border-radius: 7px; padding: 8px 12px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;">
+          <div>
+            <span style="font-size: 0.74rem; text-transform: uppercase; font-weight: 800; color: var(--deep-green); letter-spacing: 0.05em;">Protocol: </span>
+            <strong style="font-size: 0.94rem; color: var(--ink);" id="summaryProtocolVal">None selected</strong>
+          </div>
+          <span style="font-size: 0.78rem; color: var(--muted);" id="summaryTimestamp">Logged: Just now</span>
+        </div>
+
+        <!-- Habits History Table & Data Management -->
+        <div style="margin-top: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; margin-bottom: 6px;">
+            <h3 style="margin: 0; font-size: 1rem;">Habits History</h3>
+            <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+              <button type="button" id="btnExportCsv" class="secondary" style="padding: 4px 9px; font-size: 0.76rem; min-height: 32px;">
+                📥 CSV
+              </button>
+              <button type="button" id="btnExportJson" class="secondary" style="padding: 4px 9px; font-size: 0.76rem; min-height: 32px;">
+                💾 JSON
+              </button>
+              <button type="button" id="btnClearHistory" class="danger" style="padding: 4px 9px; font-size: 0.76rem; min-height: 32px;">
+                🗑️ Clear
+              </button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Sleep</th>
+                  <th>Water</th>
+                  <th>Steps</th>
+                  <th>Fasting Protocol</th>
+                  <th>BMI</th>
+                  <th style="text-align: right;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="historyTableBody">
+                <tr><td colspan="7" class="cell-empty" style="text-align: center; color: var(--muted); padding: 16px;">No habits logged yet. Record your day in Dashboard and habits.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- "See Advice" Button Leading to the Advice Page -->
+        <div style="text-align: center; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line);">
+          <p style="color: var(--muted); margin-bottom: 8px; font-size: 0.88rem;">Review your personalized health prescription based on these results:</p>
+          <button type="button" id="btnSeeAdvice" class="primary-large" style="padding: 11px 32px; font-size: 1.05rem;">
+            🔥 See Advice →
+          </button>
+        </div>
+
+      </section>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- VIEW 5: THE ADVICE PAGE (NO DR ERIC AMUNGA NAME)                          -->
+    <!-- ========================================================================= -->
+    <div id="view-step-5" class="view-step">
+      <section class="panel" style="border-left: 6px solid var(--deep-green);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+          <div>
+            <h2 id="adviceHeaderTitle" style="font-size: clamp(1.4rem, 2.5vw, 1.95rem); margin: 0 0 2px;">Amerix's Direct Advice</h2>
+            <p id="adviceSubtitle" class="desc" style="margin: 0; font-size: 0.86rem;">Unvarnished coaching and health prescriptions tailored to your latest metrics.</p>
+          </div>
+          <div>
+            <button type="button" class="secondary" onclick="showStep(4)" style="padding: 5px 12px; font-size: 0.82rem; min-height: 36px;">
+              ← Back to Your Summary
+            </button>
+          </div>
+        </div>
+
+        <div class="advice-container" id="adviceContainer">
+          <!-- Dynamically populated advice cards -->
+        </div>
+
+        <!-- Quote with Dr Eric Amunga removed -->
+        <div class="amerix-quote-box">
+          <p>"A weak body produces a weak mind. Unfat yourself, fast daily, lift heavy, sleep like a stone, and take responsibility for your existence."</p>
+          <span>— Amerix</span>
+        </div>
+
+        <div class="actions center" style="margin-top: 22px;">
+          <button type="button" onclick="showStep(3)" class="primary-large">
+            ✍️ Log Another Day in Dashboard
+          </button>
+          <button type="button" onclick="showStep(4)" class="secondary primary-large">
+            📊 Review Your Summary
+          </button>
+        </div>
+      </section>
+    </div>
+
+  </main>
+
+  <footer>
+    Amerix Health Advisor &copy; 2026. Built for metabolic health, intermittent fasting, and biological tracking.
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- JAVASCRIPT LOGIC                                                          -->
+  <!-- ========================================================================= -->
+  <script src="AmerixHealthApp.js"></script>
+</body>
+</html>
